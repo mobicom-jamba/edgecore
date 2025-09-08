@@ -1,6 +1,7 @@
 import { Repository } from 'typeorm';
 import { AppDataSource } from '../config/database';
-import { File, User } from '../models';
+import { File } from '../models/File';
+import { User } from '../models/User';
 import { FileUploadResult, FileType, SearchQuery, PaginationQuery } from '../types';
 import { config } from '../config';
 import { S3Service } from './S3Service';
@@ -299,7 +300,9 @@ export class FileService {
     };
 
     files.forEach(file => {
-      stats.filesByType[file.type]++;
+      if (file.type in stats.filesByType) {
+        stats.filesByType[file.type as keyof typeof stats.filesByType]++;
+      }
     });
 
     return stats;

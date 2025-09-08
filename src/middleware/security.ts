@@ -77,7 +77,7 @@ export const helmetConfig = helmet({
 });
 
 // Request size limiting
-export const requestSizeLimit = (req: Request, res: Response, next: NextFunction): void => {
+export const requestSizeLimit = (req: Request, res: Response, next: NextFunction) => {
   const contentLength = parseInt(req.headers['content-length'] || '0', 10);
   const maxSize = 10 * 1024 * 1024; // 10MB
 
@@ -112,7 +112,7 @@ export const ipWhitelist = (allowedIPs: string[]) => {
 };
 
 // Security headers middleware
-export const securityHeaders = (req: Request, res: Response, next: NextFunction): void => {
+export const securityHeaders = (req: Request, res: Response, next: NextFunction) => {
   // Remove X-Powered-By header
   res.removeHeader('X-Powered-By');
   
@@ -127,7 +127,7 @@ export const securityHeaders = (req: Request, res: Response, next: NextFunction)
 };
 
 // File upload security middleware
-export const fileUploadSecurity = (req: Request, res: Response, next: NextFunction): void => {
+export const fileUploadSecurity = (req: Request, res: Response, next: NextFunction) => {
   if (!req.file) {
     next();
     return;
@@ -190,7 +190,7 @@ export const fileUploadSecurity = (req: Request, res: Response, next: NextFuncti
 };
 
 // SQL injection protection middleware
-export const sqlInjectionProtection = (req: Request, res: Response, next: NextFunction): void => {
+export const sqlInjectionProtection = (req: Request, res: Response, next: NextFunction) => {
   const sqlInjectionPatterns = [
     /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC|UNION|SCRIPT)\b)/i,
     /(\b(OR|AND)\s+\d+\s*=\s*\d+)/i,
@@ -226,7 +226,7 @@ export const sqlInjectionProtection = (req: Request, res: Response, next: NextFu
 };
 
 // XSS protection middleware
-export const xssProtection = (req: Request, res: Response, next: NextFunction): void => {
+export const xssProtection = (req: Request, res: Response, next: NextFunction) => {
   const xssPatterns = [
     /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
     /javascript:/gi,

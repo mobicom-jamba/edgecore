@@ -17,27 +17,27 @@ import { File } from './File';
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ unique: true })
   @IsEmail()
   @IsNotEmpty()
-  email: string;
+  email!: string;
 
   @Column()
   @IsNotEmpty()
   @MinLength(2)
-  firstName: string;
+  firstName!: string;
 
   @Column()
   @IsNotEmpty()
   @MinLength(2)
-  lastName: string;
+  lastName!: string;
 
   @Column()
   @IsNotEmpty()
   @MinLength(6)
-  password: string;
+  password!: string;
 
   @Column({
     type: 'enum',
@@ -45,37 +45,37 @@ export class User {
     default: UserRole.USER,
   })
   @IsEnum(UserRole)
-  role: UserRole;
+  role!: UserRole;
 
   @Column({ default: false })
-  isEmailVerified: boolean;
+  isEmailVerified!: boolean;
 
-  @Column({ nullable: true })
-  emailVerificationToken: string;
+  @Column({ type: 'varchar', nullable: true })
+  emailVerificationToken!: string | null;
 
-  @Column({ nullable: true })
-  passwordResetToken: string;
+  @Column({ type: 'varchar', nullable: true })
+  passwordResetToken!: string | null;
 
-  @Column({ nullable: true })
-  passwordResetExpires: Date;
+  @Column({ type: 'timestamp', nullable: true })
+  passwordResetExpires!: Date | null;
 
-  @Column({ nullable: true })
-  lastLoginAt: Date;
+  @Column({ type: 'timestamp', nullable: true })
+  lastLoginAt!: Date;
 
   @Column({ default: true })
-  isActive: boolean;
+  isActive!: boolean;
 
-  @Column({ nullable: true })
-  avatar: string;
+  @Column({ type: 'varchar', nullable: true })
+  avatar!: string;
 
   @OneToMany(() => File, (file) => file.user)
-  files: File[];
+  files!: File[];
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @BeforeInsert()
   @BeforeUpdate()

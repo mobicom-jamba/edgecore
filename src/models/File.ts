@@ -14,30 +14,30 @@ import { User } from './User';
 @Entity('files')
 export class File {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
   @IsNotEmpty()
-  filename: string;
+  filename!: string;
 
   @Column()
   @IsNotEmpty()
-  originalName: string;
+  originalName!: string;
 
   @Column()
   @IsNotEmpty()
-  mimetype: string;
+  mimetype!: string;
 
   @Column()
-  size: number;
-
-  @Column()
-  @IsNotEmpty()
-  url: string;
+  size!: number;
 
   @Column()
   @IsNotEmpty()
-  key: string;
+  url!: string;
+
+  @Column()
+  @IsNotEmpty()
+  key!: string;
 
   @Column({
     type: 'enum',
@@ -45,36 +45,36 @@ export class File {
     default: FileType.OTHER,
   })
   @IsEnum(FileType)
-  type: FileType;
+  type!: FileType;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   @IsOptional()
-  description: string;
+  description!: string;
 
   @Column({ default: true })
-  isPublic: boolean;
+  isPublic!: boolean;
 
   @Column({ default: false })
-  isDeleted: boolean;
+  isDeleted!: boolean;
 
-  @Column({ nullable: true })
-  deletedAt: Date;
+  @Column({ type: 'timestamp', nullable: true })
+  deletedAt!: Date;
 
   @Column('jsonb', { nullable: true })
-  metadata: Record<string, any>;
+  metadata!: Record<string, any>;
 
   @ManyToOne(() => User, (user) => user.files, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
-  user: User;
+  user!: User;
 
   @Column()
-  userId: string;
+  userId!: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 
   get fileExtension(): string {
     return this.originalName.split('.').pop()?.toLowerCase() || '';

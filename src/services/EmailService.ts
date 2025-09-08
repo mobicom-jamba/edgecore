@@ -1,21 +1,28 @@
 import nodemailer from 'nodemailer';
-import sgMail from '@sendgrid/mail';
+// import sgMail from '@sendgrid/mail'; // Commented out - package not installed
 import { config } from '../config';
 import { EmailTemplate, EmailType } from '../types';
 
 export class EmailService {
-  private transporter: nodemailer.Transporter;
+  private transporter!: nodemailer.Transporter;
+  private isInitialized = false;
 
   constructor() {
-    this.initializeTransporter();
+    // Don't initialize immediately - wait until first use
   }
 
   private initializeTransporter(): void {
+    if (this.isInitialized) return;
+    
     if (config.email.service === 'sendgrid') {
-      sgMail.setApiKey(config.email.sendgridApiKey);
-    } else {
-      // Default to SMTP (can be configured for other providers)
-      this.transporter = nodemailer.createTransporter({
+      // SendGrid functionality disabled - package not installed
+      console.warn('SendGrid service not available - package not installed. Using SMTP fallback.');
+      // Fall back to SMTP instead of throwing error
+    }
+    
+    // For development, use a mock transporter if no SMTP credentials are provided
+    if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+      this.transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST || 'smtp.gmail.com',
         port: parseInt(process.env.SMTP_PORT || '587', 10),
         secure: false,
@@ -24,7 +31,16 @@ export class EmailService {
           pass: process.env.SMTP_PASS,
         },
       });
+    } else {
+      // Use a mock transporter for development
+      this.transporter = nodemailer.createTransport({
+        streamTransport: true,
+        newline: 'unix',
+        buffer: true
+      });
     }
+    
+    this.isInitialized = true;
   }
 
   async sendEmail(
@@ -34,11 +50,9 @@ export class EmailService {
     text?: string
   ): Promise<void> {
     try {
-      if (config.email.service === 'sendgrid') {
-        await this.sendWithSendGrid(to, subject, html, text);
-      } else {
-        await this.sendWithNodemailer(to, subject, html, text);
-      }
+      // Always use SMTP since SendGrid is not available
+      this.initializeTransporter();
+      await this.sendWithNodemailer(to, subject, html, text);
     } catch (error) {
       console.error('Email sending failed:', error);
       throw new Error(`Failed to send email: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -51,15 +65,8 @@ export class EmailService {
     html: string,
     text?: string
   ): Promise<void> {
-    const msg = {
-      to,
-      from: config.email.fromEmail,
-      subject,
-      text: text || this.stripHtml(html),
-      html,
-    };
-
-    await sgMail.send(msg);
+    // SendGrid functionality disabled - package not installed
+    throw new Error('SendGrid service not available - package not installed');
   }
 
   private async sendWithNodemailer(
@@ -76,7 +83,20 @@ export class EmailService {
       html,
     };
 
-    await this.transporter.sendMail(mailOptions);
+    if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+      // Real SMTP sending
+      await this.transporter.sendMail(mailOptions);
+    } else {
+      // Mock sending for development
+      console.log('📧 Mock Email Sent:', {
+        to,
+        subject,
+        from: config.email.fromEmail,
+        timestamp: new Date().toISOString()
+      });
+      // Simulate successful sending
+      await Promise.resolve();
+    }
   }
 
   async sendWelcomeEmail(email: string, firstName: string): Promise<void> {

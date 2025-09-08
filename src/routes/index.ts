@@ -5,7 +5,52 @@ import { ApiResponse } from '../types';
 
 const router = Router();
 
-// Health check endpoint
+/**
+ * @swagger
+ * /health:
+ *   get:
+ *     summary: Health check
+ *     description: Check if the server is running and healthy
+ *     tags: [System]
+ *     security: []
+ *     responses:
+ *       200:
+ *         description: Server is healthy
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ApiResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       type: object
+ *                       properties:
+ *                         timestamp:
+ *                           type: string
+ *                           format: date-time
+ *                           description: Current server timestamp
+ *                           example: "2023-12-01T10:30:00.000Z"
+ *                         uptime:
+ *                           type: number
+ *                           format: float
+ *                           description: Server uptime in seconds
+ *                           example: 3600.5
+ *                         environment:
+ *                           type: string
+ *                           description: Current environment
+ *                           example: "development"
+ *                         version:
+ *                           type: string
+ *                           description: Application version
+ *                           example: "1.0.0"
+ *       500:
+ *         description: Server is unhealthy
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 router.get('/health', (req, res) => {
   const response: ApiResponse = {
     success: true,

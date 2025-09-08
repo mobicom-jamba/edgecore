@@ -1,11 +1,11 @@
-import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
-import { Repository } from 'typeorm';
-import { AppDataSource } from '../config/database';
-import { User } from '../models/User';
-import { JWTPayload, UserRole } from '../types';
-import { config } from '../config';
-import { EmailService } from './EmailService';
+import jwt from "jsonwebtoken";
+import crypto from "crypto";
+import { Repository } from "typeorm";
+import { AppDataSource } from "../config/database";
+import { User } from "../models/User";
+import { JWTPayload, UserRole } from "../types";
+import { config } from "../config";
+import { EmailService } from "./EmailService";
 
 export class AuthService {
   private userRepository: Repository<User>;
@@ -21,20 +21,23 @@ export class AuthService {
     firstName: string;
     lastName: string;
     password: string;
-  }): Promise<{ user: User; tokens: { accessToken: string; refreshToken: string } }> {
+  }): Promise<{
+    user: User;
+    tokens: { accessToken: string; refreshToken: string };
+  }> {
     // Check if user already exists
     const existingUser = await this.userRepository.findOne({
       where: { email: userData.email },
     });
 
     if (existingUser) {
-      throw new Error('User with this email already exists');
+      throw new Error("User with this email already exists");
     }
 
     // Create new user
     const user = this.userRepository.create({
       ...userData,
-      emailVerificationToken: crypto.randomBytes(32).toString('hex'),
+      emailVerificationToken: crypto.randomBytes(32).toString("hex"),
     });
 
     const savedUser = await this.userRepository.save(user);
@@ -43,23 +46,32 @@ export class AuthService {
     const tokens = this.generateTokens(savedUser);
 
     // Send welcome email
-    await this.emailService.sendWelcomeEmail(savedUser.email, savedUser.firstName);
+    await this.emailService.sendWelcomeEmail(
+      savedUser.email,
+      savedUser.firstName
+    );
 
     return { user: savedUser, tokens };
   }
 
-  async login(email: string, password: string): Promise<{ user: User; tokens: { accessToken: string; refreshToken: string } }> {
+  async login(
+    email: string,
+    password: string
+  ): Promise<{
+    user: User;
+    tokens: { accessToken: string; refreshToken: string };
+  }> {
     const user = await this.userRepository.findOne({
       where: { email, isActive: true },
     });
 
     if (!user) {
-      throw new Error('Invalid credentials');
+      throw new Error("Invalid credentials");
     }
 
     const isPasswordValid = await user.validatePassword(password);
     if (!isPasswordValid) {
-      throw new Error('Invalid credentials');
+      throw new Error("Invalid credentials");
     }
 
     // Update last login
@@ -71,20 +83,25 @@ export class AuthService {
     return { user, tokens };
   }
 
-  async refreshToken(refreshToken: string): Promise<{ accessToken: string; refreshToken: string }> {
+  async refreshToken(
+    refreshToken: string
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     try {
-      const decoded = jwt.verify(refreshToken, config.jwt.refreshSecret) as JWTPayload;
+      const decoded = jwt.verify(
+        refreshToken,
+        config.jwt.refreshSecret
+      ) as JWTPayload;
       const user = await this.userRepository.findOne({
         where: { id: decoded.userId, isActive: true },
       });
 
       if (!user) {
-        throw new Error('Invalid refresh token');
+        throw new Error("Invalid refresh token");
       }
 
       return this.generateTokens(user);
     } catch (error) {
-      throw new Error('Invalid refresh token');
+      throw new Error("Invalid refresh token");
     }
   }
 
@@ -98,14 +115,18 @@ export class AuthService {
       return;
     }
 
-    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetToken = crypto.randomBytes(32).toString("hex");
     const resetExpires = new Date(Date.now() + 3600000); // 1 hour
 
     user.passwordResetToken = resetToken;
     user.passwordResetExpires = resetExpires;
     await this.userRepository.save(user);
 
-    await this.emailService.sendPasswordResetEmail(user.email, user.firstName, resetToken);
+    await this.emailService.sendPasswordResetEmail(
+      user.email,
+      user.firstName,
+      resetToken
+    );
   }
 
   async resetPassword(token: string, newPassword: string): Promise<void> {
@@ -117,7 +138,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new Error('Invalid or expired reset token');
+      throw new Error("Invalid or expired reset token");
     }
 
     user.password = newPassword;
@@ -132,7 +153,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new Error('Invalid verification token');
+      throw new Error("Invalid verification token");
     }
 
     user.isEmailVerified = true;
@@ -150,14 +171,21 @@ export class AuthService {
     }
 
     if (!user.emailVerificationToken) {
-      user.emailVerificationToken = crypto.randomBytes(32).toString('hex');
+      user.emailVerificationToken = crypto.randomBytes(32).toString("hex");
       await this.userRepository.save(user);
     }
 
-    await this.emailService.sendEmailVerification(user.email, user.firstName, user.emailVerificationToken);
+    await this.emailService.sendEmailVerification(
+      user.email,
+      user.firstName,
+      user.emailVerificationToken
+    );
   }
 
-  private generateTokens(user: User): { accessToken: string; refreshToken: string } {
+  private generateTokens(user: User): {
+    accessToken: string;
+    refreshToken: string;
+  } {
     const payload: JWTPayload = {
       userId: user.id,
       email: user.email,
@@ -166,11 +194,11 @@ export class AuthService {
 
     const accessToken = jwt.sign(payload, config.jwt.secret, {
       expiresIn: config.jwt.expiresIn,
-    });
+    } as jwt.SignOptions);
 
     const refreshToken = jwt.sign(payload, config.jwt.refreshSecret, {
       expiresIn: config.jwt.refreshExpiresIn,
-    });
+    } as jwt.SignOptions);
 
     return { accessToken, refreshToken };
   }
@@ -187,7 +215,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
 
     user.role = role;
@@ -200,7 +228,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
 
     user.isActive = false;

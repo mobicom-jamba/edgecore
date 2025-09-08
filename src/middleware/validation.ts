@@ -128,7 +128,7 @@ export const userSchemas = {
 };
 
 // Sanitization middleware
-export const sanitizeInput = (req: Request, res: Response, next: NextFunction): void => {
+export const sanitizeInput = (req: Request, res: Response, next: NextFunction) => {
   // Remove potentially dangerous characters from string inputs
   const sanitizeString = (str: string): string => {
     return str
@@ -167,7 +167,7 @@ export const sanitizeInput = (req: Request, res: Response, next: NextFunction): 
 };
 
 // File validation middleware
-export const validateFileUpload = (req: Request, res: Response, next: NextFunction): void => {
+export const validateFileUpload = (req: Request, res: Response, next: NextFunction) => {
   if (!req.file) {
     const response: ApiResponse = {
       success: false,

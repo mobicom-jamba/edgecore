@@ -1,3 +1,4 @@
+// @ts-ignore - swagger-jsdoc types not available
 import swaggerJsdoc from 'swagger-jsdoc';
 import { config } from '../config';
 
@@ -33,6 +34,7 @@ const options = {
           type: 'http',
           scheme: 'bearer',
           bearerFormat: 'JWT',
+          description: 'JWT token obtained from login endpoint',
         },
       },
       schemas: {
@@ -204,8 +206,152 @@ const options = {
             },
           },
         },
+        LoginRequest: {
+          type: 'object',
+          required: ['email', 'password'],
+          properties: {
+            email: {
+              type: 'string',
+              format: 'email',
+              example: 'user@example.com',
+            },
+            password: {
+              type: 'string',
+              example: 'password123',
+            },
+          },
+        },
+        RegisterRequest: {
+          type: 'object',
+          required: ['email', 'password', 'firstName', 'lastName'],
+          properties: {
+            email: {
+              type: 'string',
+              format: 'email',
+              example: 'user@example.com',
+            },
+            password: {
+              type: 'string',
+              minLength: 6,
+              example: 'password123',
+            },
+            firstName: {
+              type: 'string',
+              minLength: 2,
+              example: 'John',
+            },
+            lastName: {
+              type: 'string',
+              minLength: 2,
+              example: 'Doe',
+            },
+          },
+        },
+        TokenResponse: {
+          type: 'object',
+          properties: {
+            accessToken: {
+              type: 'string',
+              description: 'JWT access token',
+              example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+            },
+            refreshToken: {
+              type: 'string',
+              description: 'JWT refresh token',
+              example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+            },
+          },
+        },
+        FileUploadRequest: {
+          type: 'object',
+          required: ['file'],
+          properties: {
+            file: {
+              type: 'string',
+              format: 'binary',
+              description: 'File to upload (max 10MB)',
+            },
+            description: {
+              type: 'string',
+              description: 'Optional file description',
+              example: 'My important document',
+            },
+            isPublic: {
+              type: 'boolean',
+              description: 'Whether the file should be publicly accessible',
+              default: false,
+            },
+          },
+        },
+        FileUpdateRequest: {
+          type: 'object',
+          properties: {
+            description: {
+              type: 'string',
+              description: 'File description',
+              example: 'Updated file description',
+            },
+            isPublic: {
+              type: 'boolean',
+              description: 'Whether the file should be publicly accessible',
+              example: true,
+            },
+          },
+        },
+        PaginationQuery: {
+          type: 'object',
+          properties: {
+            page: {
+              type: 'integer',
+              minimum: 1,
+              default: 1,
+              description: 'Page number for pagination',
+            },
+            limit: {
+              type: 'integer',
+              minimum: 1,
+              maximum: 100,
+              default: 10,
+              description: 'Number of items per page',
+            },
+            search: {
+              type: 'string',
+              description: 'Search term',
+            },
+            sortBy: {
+              type: 'string',
+              enum: ['createdAt', 'updatedAt', 'filename', 'size'],
+              default: 'createdAt',
+              description: 'Sort field',
+            },
+            sortOrder: {
+              type: 'string',
+              enum: ['asc', 'desc'],
+              default: 'desc',
+              description: 'Sort order',
+            },
+          },
+        },
       },
     },
+    tags: [
+      {
+        name: 'Authentication',
+        description: 'User authentication and authorization endpoints',
+      },
+      {
+        name: 'Files',
+        description: 'File management endpoints',
+      },
+      {
+        name: 'Admin',
+        description: 'Administrative endpoints (admin access required)',
+      },
+      {
+        name: 'System',
+        description: 'System health and monitoring endpoints',
+      },
+    ],
     security: [
       {
         bearerAuth: [],
