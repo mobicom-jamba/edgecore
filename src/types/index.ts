@@ -118,3 +118,78 @@ export enum PaymentMethod {
   PAYPAL = 'paypal',
   CRYPTO = 'crypto',
 }
+
+// Video Learning Platform Enums
+export enum VideoStatus {
+  PENDING = 'pending',
+  PROCESSING = 'processing',
+  COMPLETED = 'completed',
+  FAILED = 'failed',
+}
+
+export enum VideoProcessingStage {
+  EXTRACTING_TRANSCRIPT = 'extracting_transcript',
+  ANALYZING_CONTENT = 'analyzing_content',
+  EXTRACTING_KNOWLEDGE = 'extracting_knowledge',
+  STRUCTURING_CONTENT = 'structuring_content',
+  COMPLETED = 'completed',
+}
+
+export enum ExtractType {
+  CONCEPT = 'concept',
+  DEFINITION = 'definition',
+  INSIGHT = 'insight',
+  EXAMPLE = 'example',
+  STEP = 'step',
+  PRINCIPLE = 'principle',
+  FACT = 'fact',
+  QUOTE = 'quote',
+}
+
+export enum DifficultyLevel {
+  BEGINNER = 'beginner',
+  INTERMEDIATE = 'intermediate',
+  ADVANCED = 'advanced',
+}
+
+export enum ExtractStatus {
+  ACTIVE = 'active',
+  ARCHIVED = 'archived',
+  REVIEWED = 'reviewed',
+}
+
+export enum CardType {
+  FLASHCARD = 'flashcard',
+  QUIZ = 'quiz',
+  FILL_BLANK = 'fill_blank',
+  MULTIPLE_CHOICE = 'multiple_choice',
+  TRUE_FALSE = 'true_false',
+  MATCHING = 'matching',
+}
+
+export enum CardDifficulty {
+  EASY = 'easy',
+  MEDIUM = 'medium',
+  HARD = 'hard',
+}
+
+export enum SessionType {
+  VIDEO_WATCH = 'video_watch',
+  CARD_REVIEW = 'card_review',
+  QUIZ = 'quiz',
+  STUDY = 'study',
+}
+
+export enum SessionStatus {
+  ACTIVE = 'active',
+  COMPLETED = 'completed',
+  PAUSED = 'paused',
+  ABANDONED = 'abandoned',
+}
+
+export enum ReviewQuality {
+  AGAIN = 'again',
+  HARD = 'hard',
+  GOOD = 'good',
+  EASY = 'easy',
+}

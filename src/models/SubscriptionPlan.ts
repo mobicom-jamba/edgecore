@@ -5,14 +5,14 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
-} from 'typeorm';
-import { IsNotEmpty, IsNumber, IsBoolean, IsEnum, Min } from 'class-validator';
-import { Subscription } from './Subscription';
-import { PlanType, BillingCycle } from '../types';
+} from "typeorm";
+import { IsNotEmpty, IsNumber, IsBoolean, IsEnum, Min } from "class-validator";
+import { Subscription } from "./Subscription";
+import { PlanType, BillingCycle } from "../types";
 
-@Entity('subscription_plans')
+@Entity("subscription_plans")
 export class SubscriptionPlan {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id!: string;
 
   @Column({ unique: true })
@@ -23,33 +23,33 @@ export class SubscriptionPlan {
   @IsNotEmpty()
   slug!: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: "text", nullable: true })
   description!: string;
 
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: PlanType,
   })
   @IsEnum(PlanType)
   type!: PlanType;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: "decimal", precision: 10, scale: 2 })
   @IsNumber()
   @Min(0)
   price!: number;
 
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: BillingCycle,
     default: BillingCycle.MONTHLY,
   })
   @IsEnum(BillingCycle)
   billingCycle!: BillingCycle;
 
-  @Column({ type: 'json' })
+  @Column({ type: "json" })
   features!: Record<string, any>;
 
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: "json", nullable: true })
   limits!: Record<string, any>;
 
   @Column({ default: true })
@@ -60,7 +60,7 @@ export class SubscriptionPlan {
   @IsBoolean()
   isPopular!: boolean;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: "int", default: 0 })
   @IsNumber()
   @Min(0)
   sortOrder!: number;

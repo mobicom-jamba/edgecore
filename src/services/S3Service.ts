@@ -1,5 +1,5 @@
-import AWS from 'aws-sdk';
-import { config } from '../config';
+import AWS from "aws-sdk";
+import { config } from "../config";
 
 export class S3Service {
   private s3: AWS.S3;
@@ -26,7 +26,7 @@ export class S3Service {
       Body: buffer,
       ContentType: contentType,
       Metadata: metadata,
-      ACL: 'private', // Files are private by default
+      ACL: "private", // Files are private by default
     };
 
     try {
@@ -36,7 +36,11 @@ export class S3Service {
         key: result.Key,
       };
     } catch (error) {
-      throw new Error(`Failed to upload file to S3: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Failed to upload file to S3: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
     }
   }
 
@@ -49,7 +53,11 @@ export class S3Service {
     try {
       await this.s3.deleteObject(params).promise();
     } catch (error) {
-      throw new Error(`Failed to delete file from S3: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Failed to delete file from S3: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
     }
   }
 
@@ -60,12 +68,16 @@ export class S3Service {
     };
 
     try {
-      return this.s3.getSignedUrl('getObject', {
+      return this.s3.getSignedUrl("getObject", {
         ...params,
         Expires: expiresIn,
       });
     } catch (error) {
-      throw new Error(`Failed to generate signed URL: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Failed to generate signed URL: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
     }
   }
 
@@ -81,12 +93,16 @@ export class S3Service {
     };
 
     try {
-      return this.s3.getSignedUrl('putObject', {
+      return this.s3.getSignedUrl("putObject", {
         ...params,
         Expires: expiresIn,
       });
     } catch (error) {
-      throw new Error(`Failed to generate signed upload URL: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Failed to generate signed upload URL: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
     }
   }
 
@@ -100,7 +116,11 @@ export class S3Service {
     try {
       await this.s3.copyObject(params).promise();
     } catch (error) {
-      throw new Error(`Failed to copy file in S3: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Failed to copy file in S3: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
     }
   }
 
@@ -113,11 +133,18 @@ export class S3Service {
     try {
       return await this.s3.headObject(params).promise();
     } catch (error) {
-      throw new Error(`Failed to get file metadata: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Failed to get file metadata: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
     }
   }
 
-  async listFiles(prefix?: string, maxKeys: number = 1000): Promise<AWS.S3.Object[]> {
+  async listFiles(
+    prefix?: string,
+    maxKeys: number = 1000
+  ): Promise<AWS.S3.Object[]> {
     const params: AWS.S3.ListObjectsV2Request = {
       Bucket: config.aws.s3Bucket,
       Prefix: prefix,
@@ -128,7 +155,11 @@ export class S3Service {
       const result = await this.s3.listObjectsV2(params).promise();
       return result.Contents || [];
     } catch (error) {
-      throw new Error(`Failed to list files: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Failed to list files: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
     }
   }
 
@@ -136,13 +167,17 @@ export class S3Service {
     const params: AWS.S3.PutObjectAclRequest = {
       Bucket: config.aws.s3Bucket,
       Key: key,
-      ACL: 'public-read',
+      ACL: "public-read",
     };
 
     try {
       await this.s3.putObjectAcl(params).promise();
     } catch (error) {
-      throw new Error(`Failed to make file public: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Failed to make file public: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
     }
   }
 
@@ -150,13 +185,17 @@ export class S3Service {
     const params: AWS.S3.PutObjectAclRequest = {
       Bucket: config.aws.s3Bucket,
       Key: key,
-      ACL: 'private',
+      ACL: "private",
     };
 
     try {
       await this.s3.putObjectAcl(params).promise();
     } catch (error) {
-      throw new Error(`Failed to make file private: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Failed to make file private: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
     }
   }
 }
