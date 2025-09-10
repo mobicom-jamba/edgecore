@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import authRoutes from './auth';
 import fileRoutes from './files';
+import adminRoutes from './admin';
+import billingRoutes from './billing';
 import { ApiResponse } from '../types';
 
 const router = Router();
@@ -68,6 +70,8 @@ router.get('/health', (req, res) => {
 // API routes
 router.use('/auth', authRoutes);
 router.use('/files', fileRoutes);
+router.use('/admin', adminRoutes);
+router.use('/billing', billingRoutes);
 
 // 404 handler for API routes
 router.use('*', (req, res) => {

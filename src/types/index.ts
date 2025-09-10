@@ -82,3 +82,39 @@ export enum EmailType {
   EMAIL_VERIFICATION = 'email_verification',
   NOTIFICATION = 'notification',
 }
+
+export enum PlanType {
+  FREE = 'free',
+  BASIC = 'basic',
+  PRO = 'pro',
+  ENTERPRISE = 'enterprise',
+}
+
+export enum BillingCycle {
+  MONTHLY = 'monthly',
+  YEARLY = 'yearly',
+}
+
+export enum SubscriptionStatus {
+  ACTIVE = 'active',
+  CANCELLED = 'cancelled',
+  PAST_DUE = 'past_due',
+  UNPAID = 'unpaid',
+  TRIALING = 'trialing',
+  INCOMPLETE = 'incomplete',
+}
+
+export enum InvoiceStatus {
+  DRAFT = 'draft',
+  OPEN = 'open',
+  PAID = 'paid',
+  VOID = 'void',
+  UNCOLLECTIBLE = 'uncollectible',
+}
+
+export enum PaymentMethod {
+  CARD = 'card',
+  BANK_TRANSFER = 'bank_transfer',
+  PAYPAL = 'paypal',
+  CRYPTO = 'crypto',
+}
