@@ -19,7 +19,8 @@ import {
   ArrowRight,
   Calendar,
   Timer,
-  CheckCircle2
+  CheckCircle2,
+  CreditCard
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -29,7 +30,9 @@ import { formatDate, getInitials } from '@/lib/utils';
 import { VideoSubmitModal } from '@/components/video-submit-modal';
 import { LearningStats } from '@/components/learning-stats';
 import { ProgressChart } from '@/components/progress-chart';
+import { Navigation } from '@/components/navigation';
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function DashboardPage() {
   const [showVideoModal, setShowVideoModal] = useState(false);
@@ -108,6 +111,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
+      <Navigation />
       <div className="space-y-10 p-8 max-w-7xl mx-auto">
         {/* Hero Section */}
         <div className="relative overflow-hidden rounded-3xl bg-white border border-gray-200/60 p-10 shadow-xl shadow-gray-900/5">
@@ -153,6 +157,77 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <Card className="group bg-white border border-gray-200/60 hover:shadow-xl hover:shadow-gray-900/10 transition-all duration-500 hover:-translate-y-2 rounded-2xl overflow-hidden">
+            <CardContent className="p-8">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200 group-hover:from-blue-200 group-hover:to-blue-300 transition-all duration-300 shadow-sm">
+                  <CreditCard className="h-7 w-7 text-blue-700 group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">Billing & Plans</h3>
+                  <p className="text-sm text-gray-600">Manage your subscription</p>
+                </div>
+              </div>
+              <p className="text-gray-600 mb-6">
+                View your current plan, usage statistics, and manage your billing preferences.
+              </p>
+              <Link href="/billing">
+                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                  <CreditCard className="w-4 h-4 mr-2" />
+                  Manage Billing
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          <Card className="group bg-white border border-gray-200/60 hover:shadow-xl hover:shadow-gray-900/10 transition-all duration-500 hover:-translate-y-2 rounded-2xl overflow-hidden">
+            <CardContent className="p-8">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-green-100 to-green-200 group-hover:from-green-200 group-hover:to-green-300 transition-all duration-300 shadow-sm">
+                  <Plus className="h-7 w-7 text-green-700 group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">Add Video</h3>
+                  <p className="text-sm text-gray-600">Start learning</p>
+                </div>
+              </div>
+              <p className="text-gray-600 mb-6">
+                Transform any YouTube video into interactive learning content with AI.
+              </p>
+              <Button 
+                onClick={() => setShowVideoModal(true)}
+                className="w-full bg-green-600 hover:bg-green-700 text-white"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add New Video
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="group bg-white border border-gray-200/60 hover:shadow-xl hover:shadow-gray-900/10 transition-all duration-500 hover:-translate-y-2 rounded-2xl overflow-hidden">
+            <CardContent className="p-8">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-200 group-hover:from-purple-200 group-hover:to-purple-300 transition-all duration-300 shadow-sm">
+                  <Brain className="h-7 w-7 text-purple-700 group-hover:scale-110 transition-transform duration-300" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">Study Session</h3>
+                  <p className="text-sm text-gray-600">Review cards</p>
+                </div>
+              </div>
+              <p className="text-gray-600 mb-6">
+                Start a spaced repetition session to review your learning cards.
+              </p>
+              <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">
+                <Brain className="w-4 h-4 mr-2" />
+                Start Studying
+              </Button>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Stats Cards */}
