@@ -1,0 +1,16 @@
+# This is a placeholder for the lo-fi sleep sounds audio file
+# In a real project, you would include a 10-15 minute lo-fi audio track
+# with the following characteristics:
+# - Gentle, non-intrusive sounds
+# - Consistent volume levels
+# - Fade in/out capability
+# - Loop-friendly (seamless transitions)
+# - Compressed for mobile (MP3 format, ~128kbps)
+#
+# Suggested content:
+# - Soft rain sounds
+# - Gentle ocean waves
+# - Light instrumental music
+# - White/pink noise variations
+#
+# For now, the audio player will show placeholder content.

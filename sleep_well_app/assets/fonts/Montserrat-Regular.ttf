@@ -1,0 +1,10 @@
+# This is a placeholder for the Montserrat Regular font file
+# In a real project, you would download the actual font file from Google Fonts
+# or another font provider and place it here.
+#
+# To get the actual font:
+# 1. Go to https://fonts.google.com/specimen/Montserrat
+# 2. Download the font family
+# 3. Extract and place Montserrat-Regular.ttf here
+#
+# For now, the app will fall back to system fonts.

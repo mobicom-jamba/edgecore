@@ -1,0 +1,14 @@
+# This is a placeholder for the app icon
+# In a real project, you would create or commission a proper app icon
+# following the design guidelines:
+# - Navy surface (#12161F)
+# - Warm teal crescent (#5ED0B5)
+# - Soft glow effect
+# - Night-safe design
+#
+# Icon sizes needed:
+# - Android: 48x48, 72x72, 96x96, 144x144, 192x192dp
+# - iOS: 20x20, 29x29, 40x40, 58x58, 60x60, 80x80, 87x87, 120x120, 180x180pt
+# - Web: 192x192, 512x512px
+#
+# For now, the app will use the default Flutter launcher icon.
