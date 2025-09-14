@@ -68,6 +68,9 @@ export class User {
   @Column({ type: 'varchar', nullable: true })
   avatar!: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  paddleCustomerId!: string | null;
+
   @OneToMany(() => File, (file) => file.user)
   files!: File[];
 

@@ -65,6 +65,12 @@ export class SubscriptionPlan {
   @Min(0)
   sortOrder!: number;
 
+  @Column({ type: 'varchar', nullable: true })
+  paddleProductId!: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  paddlePriceId!: string | null;
+
   @OneToMany(() => Subscription, (subscription) => subscription.plan)
   subscriptions!: Subscription[];
 

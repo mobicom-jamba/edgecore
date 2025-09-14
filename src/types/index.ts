@@ -193,3 +193,55 @@ export enum ReviewQuality {
   GOOD = 'good',
   EASY = 'easy',
 }
+
+// Paddle-specific types
+export interface PaddleWebhookEvent {
+  eventId: string;
+  eventType: string;
+  occurredAt: string;
+  notificationSettingId: string;
+  data: any;
+}
+
+export interface PaddleCheckoutData {
+  checkoutId: string;
+  url: string;
+  expiresAt: string;
+  customerId?: string;
+  customData?: Record<string, any>;
+}
+
+export interface PaddleSubscriptionData {
+  id: string;
+  status: 'active' | 'canceled' | 'past_due' | 'paused' | 'trialing';
+  customerId: string;
+  currencyCode: string;
+  createdAt: string;
+  updatedAt: string;
+  currentBillingPeriod?: {
+    startsAt: string;
+    endsAt: string;
+  };
+  items: Array<{
+    priceId: string;
+    quantity: number;
+  }>;
+}
+
+export interface PaddleTransactionData {
+  id: string;
+  status: 'billed' | 'completed' | 'created' | 'paid' | 'past_due' | 'payment_failed';
+  customerId: string;
+  subscriptionId?: string;
+  invoiceId?: string;
+  currencyCode: string;
+  totals: {
+    subtotal: string;
+    discount: string;
+    tax: string;
+    total: string;
+    currencyCode: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}

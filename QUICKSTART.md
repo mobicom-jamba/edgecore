@@ -3,11 +3,13 @@
 ## 🚀 Get Started in 5 Minutes
 
 ### Prerequisites
+
 - Node.js 18+
 - PostgreSQL 12+
 - Git
 
 ### 1. Clone and Setup
+
 ```bash
 git clone <your-repo-url>
 cd edgecore
@@ -16,7 +18,9 @@ chmod +x scripts/setup.sh
 ```
 
 ### 2. Configure Environment
+
 Edit `.env` file with your settings:
+
 ```env
 # Database
 DB_HOST=localhost
@@ -36,11 +40,13 @@ AWS_S3_BUCKET=your-bucket-name
 ```
 
 ### 3. Start Development Server
+
 ```bash
 npm run dev
 ```
 
 ### 4. Test the API
+
 ```bash
 # Health check
 curl http://localhost:3000/api/v1/health
@@ -67,16 +73,19 @@ curl -X POST http://localhost:3000/api/v1/auth/login \
 ## 🔑 Default Credentials
 
 **Admin User:**
+
 - Email: `admin@edgecore.com`
 - Password: `admin123456`
 
 **Test User:**
+
 - Email: `test@edgecore.com`
 - Password: `test123456`
 
 ## 📚 API Endpoints
 
 ### Authentication
+
 - `POST /api/v1/auth/register` - Register new user
 - `POST /api/v1/auth/login` - Login user
 - `POST /api/v1/auth/refresh-token` - Refresh JWT token
@@ -85,6 +94,7 @@ curl -X POST http://localhost:3000/api/v1/auth/login \
 - `POST /api/v1/auth/reset-password` - Reset password
 
 ### File Management
+
 - `POST /api/v1/files/upload` - Upload file (protected)
 - `GET /api/v1/files` - Get user files (protected)
 - `GET /api/v1/files/:id` - Get specific file (protected)
@@ -92,6 +102,7 @@ curl -X POST http://localhost:3000/api/v1/auth/login \
 - `DELETE /api/v1/files/:id` - Delete file (protected)
 
 ### System
+
 - `GET /api/v1/health` - Health check
 - `GET /api-docs` - API documentation (Swagger)
 
@@ -123,14 +134,17 @@ docker-compose down
 ## 🔧 Configuration
 
 ### Environment Variables
+
 All configuration is done through environment variables in `.env` file. See `env.example` for all available options.
 
 ### Database
+
 - Uses PostgreSQL with TypeORM
 - Automatic migrations on startup
 - Seeded with default users
 
 ### Security
+
 - JWT-based authentication
 - Rate limiting on all endpoints
 - Input validation and sanitization
@@ -138,6 +152,7 @@ All configuration is done through environment variables in `.env` file. See `env
 - Helmet security headers
 
 ### File Storage
+
 - AWS S3 integration
 - File type validation
 - Size limits
@@ -154,18 +169,21 @@ All configuration is done through environment variables in `.env` file. See `env
 ## 🚀 Production Deployment
 
 ### Using Docker
+
 ```bash
 docker build -t edgecore .
 docker run -p 3000:3000 --env-file .env edgecore
 ```
 
 ### Manual Deployment
+
 ```bash
 npm run build
 npm start
 ```
 
 ### Environment Setup
+
 - Set `NODE_ENV=production`
 - Use strong JWT secrets
 - Configure production database
@@ -177,16 +195,19 @@ npm start
 ### Common Issues
 
 1. **Database Connection Error**
+
    - Check PostgreSQL is running
    - Verify database credentials in `.env`
    - Ensure database exists
 
 2. **JWT Token Errors**
+
    - Check JWT_SECRET is set
    - Verify token format in Authorization header
    - Check token expiration
 
 3. **File Upload Issues**
+
    - Verify AWS S3 credentials
    - Check file size limits
    - Ensure allowed file types
@@ -196,6 +217,7 @@ npm start
    - Kill existing process: `lsof -ti:3000 | xargs kill`
 
 ### Getting Help
+
 - Check logs in `logs/` directory
 - Review API documentation at `/api-docs`
 - Check health endpoint: `/api/v1/health`
@@ -211,23 +233,27 @@ npm start
 ## 🎯 Features Overview
 
 ✅ **Authentication & Authorization**
+
 - User registration/login
 - JWT token management
 - Role-based access control
 - Password reset functionality
 
 ✅ **File Management**
+
 - Secure file upload
 - AWS S3 integration
 - File metadata storage
 - Download URL generation
 
 ✅ **Search & Filtering**
+
 - Advanced search capabilities
 - Pagination and sorting
 - Filter by file type, user, etc.
 
 ✅ **Security**
+
 - Rate limiting
 - Input validation
 - SQL injection protection
@@ -235,18 +261,21 @@ npm start
 - CORS configuration
 
 ✅ **Monitoring**
+
 - Structured logging
 - Error tracking
 - Performance monitoring
 - Health checks
 
 ✅ **Email Service**
+
 - SendGrid/Mailgun integration
 - Email templates
 - Welcome emails
 - Password reset emails
 
 ✅ **API Documentation**
+
 - Swagger/OpenAPI
 - Interactive documentation
 - Request/response examples
