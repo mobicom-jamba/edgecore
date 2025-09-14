@@ -734,7 +734,7 @@ router.delete('/payment-methods/:paymentMethodId', billingController.deletePayme
  * /api/v1/billing/webhooks:
  *   post:
  *     summary: Handle webhooks
- *     description: Handle webhooks from payment processors (e.g., Stripe)
+ *     description: Handle webhooks from payment processors (e.g., Paddle)
  *     tags: [Billing]
  *     security: []
  *     requestBody:
@@ -760,5 +760,145 @@ router.delete('/payment-methods/:paymentMethodId', billingController.deletePayme
  *         description: Internal server error
  */
 router.post('/webhooks', billingController.handleWebhook);
+
+/**
+ * @swagger
+ * /api/v1/billing/checkout:
+ *   post:
+ *     summary: Create Paddle checkout
+ *     description: Create a Paddle checkout session for purchasing products or subscriptions
+ *     tags: [Billing]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - items
+ *             properties:
+ *               items:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     priceId:
+ *                       type: string
+ *                       description: Paddle price ID
+ *                     quantity:
+ *                       type: integer
+ *                       minimum: 1
+ *               customData:
+ *                 type: object
+ *                 description: Additional custom data
+ *               returnUrl:
+ *                 type: string
+ *                 format: uri
+ *                 description: URL to redirect after successful payment
+ *     responses:
+ *       200:
+ *         description: Checkout created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ApiResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       type: object
+ *                       properties:
+ *                         checkoutUrl:
+ *                           type: string
+ *                           format: uri
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal server error
+ */
+router.post('/checkout',
+  validateRequest({
+    body: Joi.object({
+      items: Joi.array().items(
+        Joi.object({
+          priceId: Joi.string().required(),
+          quantity: Joi.number().integer().min(1).required(),
+        })
+      ).min(1).required(),
+      customData: Joi.object().optional(),
+      returnUrl: Joi.string().uri().optional(),
+    }),
+  }),
+  billingController.createCheckout
+);
+
+/**
+ * @swagger
+ * /api/v1/billing/price-preview:
+ *   post:
+ *     summary: Get price preview
+ *     description: Get a price preview with taxes and discounts for Paddle items
+ *     tags: [Billing]
+ *     security: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - items
+ *             properties:
+ *               items:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     priceId:
+ *                       type: string
+ *                       description: Paddle price ID
+ *                     quantity:
+ *                       type: integer
+ *                       minimum: 1
+ *               customerIpAddress:
+ *                 type: string
+ *                 format: ipv4
+ *                 description: Customer IP address for tax calculation
+ *     responses:
+ *       200:
+ *         description: Price preview retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ApiResponse'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       type: object
+ *                       description: Price preview data from Paddle
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Internal server error
+ */
+router.post('/price-preview',
+  validateRequest({
+    body: Joi.object({
+      items: Joi.array().items(
+        Joi.object({
+          priceId: Joi.string().required(),
+          quantity: Joi.number().integer().min(1).required(),
+        })
+      ).min(1).required(),
+      customerIpAddress: Joi.string().ip().optional(),
+    }),
+  }),
+  billingController.getPricePreview
+);
 
 export default router;

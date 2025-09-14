@@ -61,6 +61,12 @@ export class Subscription {
   @Column({ type: 'varchar', nullable: true })
   stripeCustomerId!: string | null;
 
+  @Column({ type: 'varchar', nullable: true })
+  paddleSubscriptionId!: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  paddleCustomerId!: string | null;
+
   @Column({ type: 'json', nullable: true })
   metadata!: Record<string, any> | null;
 

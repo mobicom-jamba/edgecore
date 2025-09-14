@@ -353,10 +353,10 @@ export class BillingController {
     }
   };
 
-  // Webhook handler for Stripe events
+  // Webhook handler for Paddle events
   handleWebhook = async (req: Request, res: Response): Promise<void> => {
     try {
-      const signature = req.headers['stripe-signature'] as string;
+      const signature = req.headers['paddle-signature'] as string;
       const payload = req.body;
 
       await this.billingService.handleWebhook(payload, signature);
@@ -365,6 +365,72 @@ export class BillingController {
     } catch (error) {
       logError(error as Error, 'BillingController.handleWebhook');
       res.status(400).json({ error: 'Webhook handling failed' });
+    }
+  };
+
+  // Create Paddle checkout
+  createCheckout = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+    try {
+      const user = req.user!;
+      const { items, customData, returnUrl } = req.body;
+
+      const checkoutData = {
+        items,
+        customerId: user.paddleCustomerId,
+        customData: {
+          userId: user.id,
+          ...customData,
+        },
+        returnUrl,
+        allowDiscountCodes: true,
+        allowPromotionCodes: true,
+        allowCoupons: true,
+      };
+
+      const checkout = await this.billingService.createCheckout(checkoutData);
+
+      const response: ApiResponse = {
+        success: true,
+        message: 'Checkout created successfully',
+        data: { checkoutUrl: checkout.url },
+      };
+
+      res.json(response);
+    } catch (error) {
+      logError(error as Error, 'BillingController.createCheckout');
+      
+      const response: ApiResponse = {
+        success: false,
+        message: error instanceof Error ? error.message : 'Failed to create checkout',
+      };
+
+      res.status(400).json(response);
+    }
+  };
+
+  // Get price preview
+  getPricePreview = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { items, customerIpAddress } = req.body;
+
+      const preview = await this.billingService.getPricePreview(items, customerIpAddress);
+
+      const response: ApiResponse = {
+        success: true,
+        message: 'Price preview retrieved successfully',
+        data: preview,
+      };
+
+      res.json(response);
+    } catch (error) {
+      logError(error as Error, 'BillingController.getPricePreview');
+      
+      const response: ApiResponse = {
+        success: false,
+        message: error instanceof Error ? error.message : 'Failed to get price preview',
+      };
+
+      res.status(400).json(response);
     }
   };
 }

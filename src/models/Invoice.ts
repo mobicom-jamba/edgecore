@@ -78,6 +78,12 @@ export class Invoice {
   @Column({ type: 'varchar', nullable: true })
   stripePaymentIntentId!: string | null;
 
+  @Column({ type: 'varchar', nullable: true })
+  paddleTransactionId!: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  paddleInvoiceId!: string | null;
+
   @Column({ type: 'json', nullable: true })
   lineItems!: Array<{
     description: string;

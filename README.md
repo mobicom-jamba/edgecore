@@ -5,6 +5,7 @@ A professional, reusable backend framework with clean architecture built with Ty
 ## 🚀 Features
 
 ### Core Features
+
 - **Authentication & Authorization**: JWT-based auth with role-based access control
 - **File Management**: Secure file upload with AWS S3 integration
 - **Search & Filtering**: Advanced search with pagination and sorting
@@ -15,6 +16,7 @@ A professional, reusable backend framework with clean architecture built with Ty
 - **API Documentation**: Swagger/OpenAPI documentation
 
 ### Architecture
+
 - **Clean Architecture**: Separation of concerns with services, controllers, and middleware
 - **Type Safety**: Full TypeScript support with strict type checking
 - **Error Handling**: Centralized error handling with custom error classes
@@ -25,7 +27,7 @@ A professional, reusable backend framework with clean architecture built with Ty
 
 ## 📋 Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - PostgreSQL 12+
 - Redis (optional, for caching)
 - AWS S3 account (for file storage)
@@ -33,30 +35,34 @@ A professional, reusable backend framework with clean architecture built with Ty
 ## 🛠️ Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd edgecore
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Environment setup**
+
    ```bash
    cp env.example .env
    # Edit .env with your configuration
    ```
 
 4. **Database setup**
+
    ```bash
    # Create PostgreSQL database
    createdb edgecore_db
-   
+
    # Run migrations
    npm run migrate
-   
+
    # Seed database (optional)
    npm run seed
    ```
@@ -104,6 +110,7 @@ FROM_EMAIL=noreply@yourdomain.com
 ## 📚 API Documentation
 
 Once the server is running, visit:
+
 - **Swagger UI**: `http://localhost:3000/api-docs`
 - **Health Check**: `http://localhost:3000/api/v1/health`
 
@@ -127,6 +134,7 @@ src/
 ## 🔐 Authentication
 
 ### Register
+
 ```bash
 POST /api/v1/auth/register
 {
@@ -138,6 +146,7 @@ POST /api/v1/auth/register
 ```
 
 ### Login
+
 ```bash
 POST /api/v1/auth/login
 {
@@ -147,7 +156,9 @@ POST /api/v1/auth/login
 ```
 
 ### Protected Routes
+
 Include the JWT token in the Authorization header:
+
 ```
 Authorization: Bearer <your-jwt-token>
 ```
@@ -155,6 +166,7 @@ Authorization: Bearer <your-jwt-token>
 ## 📁 File Management
 
 ### Upload File
+
 ```bash
 POST /api/v1/files/upload
 Content-Type: multipart/form-data
@@ -165,6 +177,7 @@ isPublic: true
 ```
 
 ### Get Files
+
 ```bash
 GET /api/v1/files?page=1&limit=10&search=document
 ```
@@ -214,6 +227,7 @@ npm run seed         # Seed database
 ## 🚀 Deployment
 
 ### Docker (Recommended)
+
 ```bash
 # Build image
 docker build -t edgecore .
@@ -223,6 +237,7 @@ docker run -p 3000:3000 --env-file .env edgecore
 ```
 
 ### Manual Deployment
+
 ```bash
 # Build application
 npm run build
@@ -246,6 +261,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🆘 Support
 
 For support and questions:
+
 - Create an issue in the repository
 - Contact: support@edgecore.com
 

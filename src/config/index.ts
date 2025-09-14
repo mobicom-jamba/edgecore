@@ -74,4 +74,11 @@ export const config = {
     bcryptRounds: parseInt(process.env.BCRYPT_ROUNDS || '12', 10),
     sessionSecret: process.env.SESSION_SECRET || 'your-session-secret',
   },
+  
+  paddle: {
+    apiKey: process.env.PADDLE_API_KEY || '',
+    environment: process.env.PADDLE_ENVIRONMENT || 'sandbox',
+    webhookSecret: process.env.PADDLE_WEBHOOK_SECRET || '',
+    vendorId: process.env.PADDLE_VENDOR_ID || '',
+  },
 };
