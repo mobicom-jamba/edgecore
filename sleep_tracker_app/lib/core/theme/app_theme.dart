@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // Colors - Updated to match new design
-  static const Color primaryBlue = Color(0xFF1919E6);
+  static const Color primaryBlue = Color(0xFF7B68EE);
   static const Color darkBackground = Color(0xFF111121);
   static const Color cardBackground = Color(0xFF1A1A2E);
   static const Color textPrimary = Color(0xFFFFFFFF);
@@ -11,9 +11,9 @@ class AppTheme {
   static const Color textTertiary = Color(0xFF8E8EA0);
   
   // Sleep colors
-  static const Color sleepDeep = Color(0xFF1919E6);
-  static const Color sleepLight = Color(0xFF4A90E2);
-  static const Color sleepRem = Color(0xFF7B68EE);
+  static const Color sleepDeep = Color(0xFF7B68EE);
+  static const Color sleepLight = Color(0xFF9A8FEF);
+  static const Color sleepRem = Color(0xFFB8A9F5);
   static const Color sleepAwake = Color(0xFFFF6B6B);
   
   static const Color successGreen = Color(0xFF34C759);
@@ -32,8 +32,8 @@ class AppTheme {
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
     colors: [
-      Color(0x334A90E2), // sleepLight with opacity
-      Color(0x001919E6), // primaryBlue with 0 opacity
+      Color(0x339A8FEF), // sleepLight with opacity
+      Color(0x007B68EE), // primaryBlue with 0 opacity
     ],
   );
   

@@ -26,7 +26,8 @@ class OnboardingSleepGoalStep extends StatelessWidget {
             icon: Icons.flag_outlined,
             gradientColors: [AppTheme.primaryBlue, AppTheme.sleepRem],
             title: 'What\'s your sleep goal?',
-            subtitle: 'We\'ll help you achieve consistent, quality sleep based on your target.',
+            subtitle:
+                'We\'ll help you achieve consistent, quality sleep based on your target.',
           ),
           _buildSleepGoalSlider(),
           const SizedBox(height: OnboardingStyles.itemSpacing),
@@ -39,7 +40,7 @@ class OnboardingSleepGoalStep extends StatelessWidget {
 
   Widget _buildSleepGoalSlider() {
     double currentValue = userData['sleepGoal'] ?? 8.0;
-    
+
     return Column(
       children: [
         Row(
@@ -140,7 +141,8 @@ class OnboardingSleepHabitsStep extends StatelessWidget {
             icon: Icons.psychology_outlined,
             gradientColors: [AppTheme.sleepRem, AppTheme.sleepDeep],
             title: 'How do you sleep?',
-            subtitle: 'Tell us about your current sleep quality and challenges.',
+            subtitle:
+                'Tell us about your current sleep quality and challenges.',
           ),
           _buildSleepQualitySection(),
           const SizedBox(height: OnboardingStyles.itemSpacing),
@@ -153,21 +155,22 @@ class OnboardingSleepHabitsStep extends StatelessWidget {
 
   Widget _buildSleepQualitySection() {
     int currentQuality = userData['sleepQuality'] ?? 3;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         OnboardingCommonWidgets.buildSectionTitle(
-          'How would you rate your current sleep quality?'
-        ),
+            'How would you rate your current sleep quality?'),
         const SizedBox(height: 20),
         _buildStarRating(currentQuality),
         const SizedBox(height: 12),
         const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Poor', style: TextStyle(color: AppTheme.textTertiary, fontSize: 12)),
-            Text('Excellent', style: TextStyle(color: AppTheme.textTertiary, fontSize: 12)),
+            Text('Poor',
+                style: TextStyle(color: AppTheme.textTertiary, fontSize: 12)),
+            Text('Excellent',
+                style: TextStyle(color: AppTheme.textTertiary, fontSize: 12)),
           ],
         ),
       ],
@@ -188,8 +191,10 @@ class OnboardingSleepHabitsStep extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: isSelected ? AppTheme.primaryBlue : AppTheme.cardBackground,
-              borderRadius: BorderRadius.circular(OnboardingStyles.smallBorderRadius),
+              color:
+                  isSelected ? AppTheme.primaryBlue : AppTheme.cardBackground,
+              borderRadius:
+                  BorderRadius.circular(OnboardingStyles.smallBorderRadius),
               border: Border.all(
                 color: isSelected ? AppTheme.primaryBlue : AppTheme.borderColor,
                 width: 2,
@@ -207,14 +212,14 @@ class OnboardingSleepHabitsStep extends StatelessWidget {
   }
 
   Widget _buildSleepChallengesSection() {
-    List<String> currentChallenges = List<String>.from(userData['sleepChallenges'] ?? []);
-    
+    List<String> currentChallenges =
+        List<String>.from(userData['sleepChallenges'] ?? []);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         OnboardingCommonWidgets.buildSectionTitle(
-          'What sleep challenges do you face? (Select all that apply)'
-        ),
+            'What sleep challenges do you face? (Select all that apply)'),
         const SizedBox(height: 20),
         Wrap(
           spacing: 8,
@@ -235,13 +240,13 @@ class OnboardingSleepHabitsStep extends StatelessWidget {
   void _toggleChallenge(String challenge, List<String> currentChallenges) {
     HapticFeedback.selectionClick();
     List<String> updatedChallenges = List<String>.from(currentChallenges);
-    
+
     if (updatedChallenges.contains(challenge)) {
       updatedChallenges.remove(challenge);
     } else {
       updatedChallenges.add(challenge);
     }
-    
+
     onDataChanged('sleepChallenges', updatedChallenges);
   }
 }
@@ -270,9 +275,11 @@ class OnboardingSleepScheduleStep extends StatelessWidget {
             title: 'Set your schedule',
             subtitle: 'When do you usually go to bed and wake up?',
           ),
-          _buildTimeSelector(context, 'Bedtime', 'currentBedtime', Icons.bedtime),
+          _buildTimeSelector(
+              context, 'Bedtime', 'currentBedtime', Icons.bedtime),
           const SizedBox(height: OnboardingStyles.itemSpacing),
-          _buildTimeSelector(context, 'Wake Time', 'currentWakeTime', Icons.wb_sunny),
+          _buildTimeSelector(
+              context, 'Wake Time', 'currentWakeTime', Icons.wb_sunny),
           const SizedBox(height: OnboardingStyles.itemSpacing),
           _buildSleepDurationCard(),
           const SizedBox(height: OnboardingStyles.sectionSpacing),
@@ -281,9 +288,11 @@ class OnboardingSleepScheduleStep extends StatelessWidget {
     );
   }
 
-  Widget _buildTimeSelector(BuildContext context, String title, String key, IconData icon) {
-    TimeOfDay currentTime = userData[key] ?? TimeOfDay(hour: key == 'currentBedtime' ? 23 : 7, minute: 0);
-    
+  Widget _buildTimeSelector(
+      BuildContext context, String title, String key, IconData icon) {
+    TimeOfDay currentTime = userData[key] ??
+        TimeOfDay(hour: key == 'currentBedtime' ? 23 : 7, minute: 0);
+
     return OnboardingCommonWidgets.buildCard(
       child: Row(
         children: [
@@ -291,7 +300,8 @@ class OnboardingSleepScheduleStep extends StatelessWidget {
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: AppTheme.primaryBlue.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(OnboardingStyles.smallBorderRadius),
+              borderRadius:
+                  BorderRadius.circular(OnboardingStyles.smallBorderRadius),
             ),
             child: Icon(icon, color: AppTheme.primaryBlue, size: 24),
           ),
@@ -332,7 +342,8 @@ class OnboardingSleepScheduleStep extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: AppTheme.primaryBlue,
-          borderRadius: BorderRadius.circular(OnboardingStyles.tinyBorderRadius),
+          borderRadius:
+              BorderRadius.circular(OnboardingStyles.tinyBorderRadius),
         ),
         child: const Text(
           'Change',
@@ -347,12 +358,14 @@ class OnboardingSleepScheduleStep extends StatelessWidget {
   }
 
   Widget _buildSleepDurationCard() {
-    TimeOfDay bedtime = userData['currentBedtime'] ?? TimeOfDay(hour: 23, minute: 0);
-    TimeOfDay wakeTime = userData['currentWakeTime'] ?? TimeOfDay(hour: 7, minute: 0);
-    
+    TimeOfDay bedtime =
+        userData['currentBedtime'] ?? TimeOfDay(hour: 23, minute: 0);
+    TimeOfDay wakeTime =
+        userData['currentWakeTime'] ?? TimeOfDay(hour: 7, minute: 0);
+
     double duration = TimeUtils.calculateSleepDuration(bedtime, wakeTime);
     Color durationColor = SleepDurationValidator.getDurationColor(duration);
-    
+
     return OnboardingCommonWidgets.buildCard(
       gradient: LinearGradient(
         colors: [
@@ -420,7 +433,7 @@ class OnboardingSleepScheduleStep extends StatelessWidget {
 
   Future<void> _selectTime(BuildContext context, String key) async {
     TimeOfDay currentTime = userData[key] ?? TimeOfDay(hour: 23, minute: 0);
-    
+
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: currentTime,
@@ -428,14 +441,14 @@ class OnboardingSleepScheduleStep extends StatelessWidget {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: Theme.of(context).colorScheme.copyWith(
-              primary: AppTheme.primaryBlue,
-            ),
+                  primary: AppTheme.primaryBlue,
+                ),
           ),
           child: child!,
         );
       },
     );
-    
+
     if (picked != null) {
       HapticFeedback.selectionClick();
       onDataChanged(key, picked);
@@ -465,7 +478,8 @@ class OnboardingPermissionsStep extends StatelessWidget {
             icon: Icons.notifications_active,
             gradientColors: [AppTheme.successGreen, AppTheme.primaryBlue],
             title: 'Stay consistent',
-            subtitle: 'Consistency is key to better sleep. Let us help you stick to your schedule.',
+            subtitle:
+                'Consistency is key to better sleep. Let us help you stick to your schedule.',
           ),
           _buildNotificationExplanation(),
           const SizedBox(height: OnboardingStyles.sectionSpacing),
@@ -494,7 +508,10 @@ class OnboardingPermissionsStep extends StatelessWidget {
         children: [
           OnboardingCommonWidgets.buildIconContainer(
             icon: Icons.bedtime_outlined,
-            gradientColors: [AppTheme.primaryBlue.withOpacity(0.15), AppTheme.primaryBlue.withOpacity(0.15)],
+            gradientColors: [
+              AppTheme.primaryBlue.withOpacity(0.15),
+              AppTheme.primaryBlue.withOpacity(0.15)
+            ],
           ),
           const SizedBox(height: 20),
           const Text(
@@ -523,7 +540,7 @@ class OnboardingPermissionsStep extends StatelessWidget {
 
   Widget _buildNotificationToggle() {
     bool isEnabled = userData['notificationsEnabled'] ?? true;
-    
+
     return OnboardingCommonWidgets.buildCard(
       borderColor: isEnabled ? AppTheme.primaryBlue : AppTheme.borderColor,
       borderWidth: isEnabled ? 2 : 1,
@@ -538,7 +555,9 @@ class OnboardingPermissionsStep extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.notifications_active,
-                      color: isEnabled ? AppTheme.primaryBlue : AppTheme.textSecondary,
+                      color: isEnabled
+                          ? AppTheme.primaryBlue
+                          : AppTheme.textSecondary,
                       size: 24,
                     ),
                     const SizedBox(width: 12),
@@ -556,12 +575,14 @@ class OnboardingPermissionsStep extends StatelessWidget {
                 ),
                 const SizedBox(height: OnboardingStyles.smallSpacing),
                 Text(
-                  isEnabled 
+                  isEnabled
                       ? 'Perfect! You\'ll get helpful sleep reminders.'
                       : 'You can always enable this later in settings.',
                   style: TextStyle(
                     fontSize: 13,
-                    color: isEnabled ? AppTheme.primaryBlue : AppTheme.textSecondary,
+                    color: isEnabled
+                        ? AppTheme.primaryBlue
+                        : AppTheme.textSecondary,
                     fontWeight: isEnabled ? FontWeight.w500 : FontWeight.normal,
                   ),
                 ),
@@ -606,7 +627,10 @@ class OnboardingPermissionsStep extends StatelessWidget {
         children: [
           OnboardingCommonWidgets.buildIconContainer(
             icon: Icons.check,
-            gradientColors: [AppTheme.successGreen.withOpacity(0.2), AppTheme.successGreen.withOpacity(0.2)],
+            gradientColors: [
+              AppTheme.successGreen.withOpacity(0.2),
+              AppTheme.successGreen.withOpacity(0.2)
+            ],
           ),
           const SizedBox(height: 16),
           const Text(

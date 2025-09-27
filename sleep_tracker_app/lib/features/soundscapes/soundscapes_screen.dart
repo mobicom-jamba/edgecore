@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../shared/widgets/app_header.dart';
+import '../../core/theme/app_theme.dart';
 
 class SoundscapesScreen extends StatefulWidget {
   const SoundscapesScreen({Key? key}) : super(key: key);
@@ -9,55 +10,12 @@ class SoundscapesScreen extends StatefulWidget {
   State<SoundscapesScreen> createState() => _SoundscapesScreenState();
 }
 
-class _SoundscapesScreenState extends State<SoundscapesScreen>
-    with TickerProviderStateMixin {
+class _SoundscapesScreenState extends State<SoundscapesScreen> {
   final TextEditingController _searchController = TextEditingController();
   int selectedTabIndex = 0;
-  late AnimationController _headerAnimationController;
-  late AnimationController _contentAnimationController;
-  late Animation<double> _headerAnimation;
-  late Animation<double> _contentAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeAnimations();
-    _startAnimations();
-  }
-
-  void _initializeAnimations() {
-    _headerAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-
-    _contentAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      vsync: this,
-    );
-
-    _headerAnimation = CurvedAnimation(
-      parent: _headerAnimationController,
-      curve: Curves.easeOutCubic,
-    );
-
-    _contentAnimation = CurvedAnimation(
-      parent: _contentAnimationController,
-      curve: Curves.easeOutCubic,
-    );
-  }
-
-  void _startAnimations() {
-    _headerAnimationController.forward();
-    Future.delayed(const Duration(milliseconds: 200), () {
-      _contentAnimationController.forward();
-    });
-  }
 
   @override
   void dispose() {
-    _headerAnimationController.dispose();
-    _contentAnimationController.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -154,8 +112,7 @@ class _SoundscapesScreenState extends State<SoundscapesScreen>
               showSearch: true,
               searchController: _searchController,
               searchHint: 'Search for sounds, meditations...',
-              animated: true,
-              animation: _headerAnimation,
+              animated: false,
             ),
             _buildTabBar(),
             Expanded(
@@ -189,218 +146,149 @@ class _SoundscapesScreenState extends State<SoundscapesScreen>
       {'name': 'Stories', 'count': 15}
     ];
 
-    return AnimatedBuilder(
-      animation: _headerAnimation,
-      builder: (context, child) {
-        return Transform.translate(
-          offset: Offset(0, 30 * (1 - _headerAnimation.value)),
-          child: Opacity(
-            opacity: _headerAnimation.value,
-            child: Container(
-              decoration: const BoxDecoration(
-                border: Border(
-                    bottom: BorderSide(color: Colors.white10, width: 0.5)),
-              ),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                child: Row(
-                  children: tabs.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final tab = entry.value;
-                    final isSelected = index == selectedTabIndex;
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.white10, width: 0.5)),
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: tabs.asMap().entries.map((entry) {
+            final index = entry.key;
+            final tab = entry.value;
+            final isSelected = index == selectedTabIndex;
 
-                    return TweenAnimationBuilder(
-                      duration: Duration(milliseconds: 300 + (index * 100)),
-                      tween: Tween<double>(begin: 0, end: 1),
-                      builder: (context, double value, child) {
-                        return Transform.translate(
-                          offset: Offset(0, 20 * (1 - value)),
-                          child: Opacity(
-                            opacity: value,
-                            child: GestureDetector(
-                              onTap: () {
-                                HapticFeedback.selectionClick();
-                                setState(() => selectedTabIndex = index);
-                              },
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeOutCubic,
-                                margin: const EdgeInsets.only(right: 12),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 10),
-                                decoration: BoxDecoration(
-                                  color: isSelected
-                                      ? const Color(0xFF171ae8).withOpacity(0.2)
-                                      : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                    color: isSelected
-                                        ? const Color(0xFF171ae8)
-                                        : Colors.white.withOpacity(0.2),
-                                    width: 1,
-                                  ),
-                                  boxShadow: isSelected
-                                      ? [
-                                          BoxShadow(
-                                            color: const Color(0xFF171ae8)
-                                                .withOpacity(0.3),
-                                            blurRadius: 8,
-                                            offset: const Offset(0, 2),
-                                          ),
-                                        ]
-                                      : [],
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    AnimatedDefaultTextStyle(
-                                      duration:
-                                          const Duration(milliseconds: 200),
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: isSelected
-                                            ? FontWeight.w600
-                                            : FontWeight.w500,
-                                        color: isSelected
-                                            ? Colors.white
-                                            : Colors.grey[300],
-                                      ),
-                                      child: Text(tab['name'] as String),
-                                    ),
-                                    const SizedBox(width: 6),
-                                    AnimatedContainer(
-                                      duration:
-                                          const Duration(milliseconds: 200),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 6, vertical: 2),
-                                      decoration: BoxDecoration(
-                                        color: isSelected
-                                            ? const Color(0xFF171ae8)
-                                            : Colors.white.withOpacity(0.1),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: AnimatedDefaultTextStyle(
-                                        duration:
-                                            const Duration(milliseconds: 200),
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w600,
-                                          color: isSelected
-                                              ? Colors.white
-                                              : Colors.grey[400],
-                                        ),
-                                        child: Text('${tab['count']}'),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+            return GestureDetector(
+              onTap: () {
+                HapticFeedback.selectionClick();
+                setState(() => selectedTabIndex = index);
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOutCubic,
+                margin: const EdgeInsets.only(right: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? AppTheme.primaryBlue.withOpacity(0.2)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: isSelected
+                        ? AppTheme.primaryBlue
+                        : Colors.white.withOpacity(0.2),
+                    width: 1,
+                  ),
+                  boxShadow: isSelected
+                      ? [
+                          BoxShadow(
+                            color: AppTheme.primaryBlue.withOpacity(0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
                           ),
-                        );
-                      },
-                    );
-                  }).toList(),
+                        ]
+                      : [],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AnimatedDefaultTextStyle(
+                      duration: const Duration(milliseconds: 200),
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight:
+                            isSelected ? FontWeight.w600 : FontWeight.w500,
+                        color: isSelected ? Colors.white : Colors.grey[300],
+                      ),
+                      child: Text(tab['name'] as String),
+                    ),
+                    const SizedBox(width: 6),
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? AppTheme.primaryBlue
+                            : Colors.white.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: AnimatedDefaultTextStyle(
+                        duration: const Duration(milliseconds: 200),
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: isSelected ? Colors.white : Colors.grey[400],
+                        ),
+                        child: Text('${tab['count']}'),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ),
-        );
-      },
+            );
+          }).toList(),
+        ),
+      ),
     );
   }
 
   Widget _buildRecommendedSection() {
-    return AnimatedBuilder(
-      animation: _contentAnimation,
-      builder: (context, child) {
-        return Transform.translate(
-          offset: Offset(0, 50 * (1 - _contentAnimation.value)),
-          child: Opacity(
-            opacity: _contentAnimation.value,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TweenAnimationBuilder(
-                    duration: const Duration(milliseconds: 600),
-                    tween: Tween<double>(begin: 0, end: 1),
-                    builder: (context, double value, child) {
-                      return Transform.translate(
-                        offset: Offset(-30 * (1 - value), 0),
-                        child: Opacity(
-                          opacity: value,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Recommended',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(8),
-                                  onTap: () {
-                                    HapticFeedback.lightImpact();
-                                    // See all functionality
-                                  },
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(8),
-                                    child: Text(
-                                      'See All',
-                                      style: TextStyle(
-                                        color: Color(0xFF171ae8),
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    height: 200,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: recommended.length,
-                      itemBuilder: (context, index) {
-                        final item = recommended[index];
-                        return TweenAnimationBuilder(
-                          duration: Duration(milliseconds: 400 + (index * 150)),
-                          tween: Tween<double>(begin: 0, end: 1),
-                          builder: (context, double value, child) {
-                            return Transform.translate(
-                              offset: Offset(30 * (1 - value), 0),
-                              child: Opacity(
-                                opacity: value,
-                                child: _buildSoundCard(item, index),
-                              ),
-                            );
-                          },
-                        );
-                      },
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Recommended',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    _showAllRecommended();
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      'See All',
+                      style: TextStyle(
+                        color: AppTheme.primaryBlue,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
-                ],
+                ),
               ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 200,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: recommended.length,
+              itemBuilder: (context, index) {
+                final item = recommended[index];
+                return _buildSoundCard(item, index);
+              },
             ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 
@@ -461,65 +349,46 @@ class _SoundscapesScreenState extends State<SoundscapesScreen>
                       Positioned(
                         top: 10,
                         right: 10,
-                        child: TweenAnimationBuilder(
-                          duration: const Duration(milliseconds: 500),
-                          tween: Tween<double>(begin: 0, end: 1),
-                          builder: (context, double value, child) {
-                            return Transform.scale(
-                              scale: value,
-                              child: Container(
-                                padding: const EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                  color: Colors.red.withOpacity(0.9),
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.red.withOpacity(0.3),
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: const Icon(
-                                  Icons.favorite,
-                                  color: Colors.white,
-                                  size: 14,
-                                ),
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: Colors.red.withOpacity(0.9),
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.red.withOpacity(0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
                               ),
-                            );
-                          },
+                            ],
+                          ),
+                          child: const Icon(
+                            Icons.favorite,
+                            color: Colors.white,
+                            size: 14,
+                          ),
                         ),
                       ),
                       Positioned.fill(
                         child: Center(
-                          child: TweenAnimationBuilder(
-                            duration:
-                                Duration(milliseconds: 600 + (index * 100)),
-                            tween: Tween<double>(begin: 0, end: 1),
-                            builder: (context, double value, child) {
-                              return Transform.scale(
-                                scale: value,
-                                child: Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.2),
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.3),
-                                        blurRadius: 10,
-                                        offset: const Offset(0, 4),
-                                      ),
-                                    ],
-                                  ),
-                                  child: const Icon(
-                                    Icons.play_arrow,
-                                    color: Colors.white,
-                                    size: 24,
-                                  ),
+                          child: Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.3),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
                                 ),
-                              );
-                            },
+                              ],
+                            ),
+                            child: const Icon(
+                              Icons.play_arrow,
+                              color: Colors.white,
+                              size: 24,
+                            ),
                           ),
                         ),
                       ),
@@ -608,11 +477,14 @@ class _SoundscapesScreenState extends State<SoundscapesScreen>
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  _showAllMeditations();
+                },
                 child: const Text(
                   'View All',
                   style: TextStyle(
-                    color: Color(0xFF171ae8),
+                    color: AppTheme.primaryBlue,
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
                   ),
@@ -726,17 +598,20 @@ class _SoundscapesScreenState extends State<SoundscapesScreen>
               const Text(
                 'Your Favorites',
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  _showAllFavorites();
+                },
                 child: const Text(
                   'See All',
                   style: TextStyle(
-                    color: Color(0xFF171ae8),
+                    color: AppTheme.primaryBlue,
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
                   ),
@@ -875,6 +750,723 @@ class _SoundscapesScreenState extends State<SoundscapesScreen>
                                 ],
                               ),
                             ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAllRecommended() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const AllRecommendedSheet(),
+    );
+  }
+
+  void _showAllMeditations() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const AllMeditationsSheet(),
+    );
+  }
+
+  void _showAllFavorites() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const AllFavoritesSheet(),
+    );
+  }
+}
+
+// Recommended Tracks Bottom Sheet
+class AllRecommendedSheet extends StatelessWidget {
+  const AllRecommendedSheet({Key? key}) : super(key: key);
+
+  final List<Map<String, dynamic>> recommendedTracks = const [
+    {
+      'title': 'Ocean Waves',
+      'duration': '25 min',
+      'rating': 4.9,
+      'category': 'Nature',
+      'icon': Icons.waves,
+    },
+    {
+      'title': 'Forest Rain',
+      'duration': '45 min',
+      'rating': 4.8,
+      'category': 'Nature',
+      'icon': Icons.forest,
+    },
+    {
+      'title': 'Mountain Stream',
+      'duration': '30 min',
+      'rating': 4.7,
+      'category': 'Nature',
+      'icon': Icons.water,
+    },
+    {
+      'title': 'Night Sky',
+      'duration': '35 min',
+      'rating': 4.8,
+      'category': 'Ambient',
+      'icon': Icons.nights_stay,
+    },
+    {
+      'title': 'Gentle Breeze',
+      'duration': '40 min',
+      'rating': 4.9,
+      'category': 'Nature',
+      'icon': Icons.air,
+    },
+    {
+      'title': 'Deep Cave',
+      'duration': '20 min',
+      'rating': 4.6,
+      'category': 'Ambient',
+      'icon': Icons.terrain,
+    },
+    {
+      'title': 'Crackling Fire',
+      'duration': '50 min',
+      'rating': 4.5,
+      'category': 'Cozy',
+      'icon': Icons.local_fire_department,
+    },
+    {
+      'title': 'Thunderstorm',
+      'duration': '60 min',
+      'rating': 4.7,
+      'category': 'Nature',
+      'icon': Icons.thunderstorm,
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.85,
+      decoration: const BoxDecoration(
+        color: Color(0xFF0F0F23),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      child: Column(
+        children: [
+          // Handle
+          Container(
+            margin: const EdgeInsets.only(top: 12),
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+
+          // Header
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                const Expanded(
+                  child: Text(
+                    'All Recommended',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: Icon(
+                    Icons.close,
+                    color: Colors.white.withOpacity(0.7),
+                    size: 24,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Content
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: recommendedTracks.length,
+              itemBuilder: (context, index) {
+                final track = recommendedTracks[index];
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1A1A2E),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: AppTheme.primaryBlue.withOpacity(0.2),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      // Track Icon
+                      Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              AppTheme.primaryBlue.withOpacity(0.3),
+                              AppTheme.sleepRem.withOpacity(0.1),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          track['icon'] as IconData,
+                          color: AppTheme.primaryBlue,
+                          size: 30,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+
+                      // Track Info
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              track['title'] as String,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              track['category'] as String,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white.withOpacity(0.6),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Text(
+                                  track['duration'] as String,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white.withOpacity(0.7),
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                const Icon(
+                                  Icons.star,
+                                  size: 16,
+                                  color: Colors.amber,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  track['rating'].toString(),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white.withOpacity(0.7),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Play Button
+                      GestureDetector(
+                        onTap: () {
+                          HapticFeedback.lightImpact();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Playing ${track['title']}...'),
+                              backgroundColor: AppTheme.primaryBlue,
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: AppTheme.primaryBlue,
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          child: const Icon(
+                            Icons.play_arrow,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Meditations Bottom Sheet
+class AllMeditationsSheet extends StatelessWidget {
+  const AllMeditationsSheet({Key? key}) : super(key: key);
+
+  final List<Map<String, dynamic>> meditationTracks = const [
+    {
+      'title': 'Breathing Exercise',
+      'duration': '5 min',
+      'difficulty': 'Beginner',
+      'icon': Icons.air,
+    },
+    {
+      'title': 'Body Scan',
+      'duration': '15 min',
+      'difficulty': 'Intermediate',
+      'icon': Icons.self_improvement,
+    },
+    {
+      'title': 'Mindful Moments',
+      'duration': '10 min',
+      'difficulty': 'Beginner',
+      'icon': Icons.psychology,
+    },
+    {
+      'title': 'Deep Focus',
+      'duration': '20 min',
+      'difficulty': 'Advanced',
+      'icon': Icons.center_focus_strong,
+    },
+    {
+      'title': 'Loving Kindness',
+      'duration': '12 min',
+      'difficulty': 'Intermediate',
+      'icon': Icons.favorite,
+    },
+    {
+      'title': 'Sleep Preparation',
+      'duration': '8 min',
+      'difficulty': 'Beginner',
+      'icon': Icons.bedtime,
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.85,
+      decoration: const BoxDecoration(
+        color: Color(0xFF0F0F23),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      child: Column(
+        children: [
+          // Handle
+          Container(
+            margin: const EdgeInsets.only(top: 12),
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+
+          // Header
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                const Expanded(
+                  child: Text(
+                    'Quick Meditations',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: Icon(
+                    Icons.close,
+                    color: Colors.white.withOpacity(0.7),
+                    size: 24,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Content
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: meditationTracks.length,
+              itemBuilder: (context, index) {
+                final meditation = meditationTracks[index];
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1A1A2E),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: AppTheme.primaryBlue.withOpacity(0.2),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      // Meditation Icon
+                      Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              AppTheme.sleepRem.withOpacity(0.3),
+                              AppTheme.primaryBlue.withOpacity(0.1),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          meditation['icon'] as IconData,
+                          color: AppTheme.sleepRem,
+                          size: 30,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+
+                      // Meditation Info
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              meditation['title'] as String,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              meditation['difficulty'] as String,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white.withOpacity(0.6),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.timer,
+                                  size: 16,
+                                  color: Color(0xFF7B68EE),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  meditation['duration'] as String,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white.withOpacity(0.7),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Start Button
+                      GestureDetector(
+                        onTap: () {
+                          HapticFeedback.lightImpact();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content:
+                                  Text('Starting ${meditation['title']}...'),
+                              backgroundColor: AppTheme.sleepRem,
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: AppTheme.sleepRem,
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          child: const Icon(
+                            Icons.play_arrow,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Favorites Bottom Sheet
+class AllFavoritesSheet extends StatelessWidget {
+  const AllFavoritesSheet({Key? key}) : super(key: key);
+
+  final List<Map<String, dynamic>> favoriteTracks = const [
+    {
+      'title': 'Ocean Lullaby',
+      'duration': '25 min',
+      'category': 'Nature',
+      'playCount': 47,
+      'icon': Icons.waves,
+    },
+    {
+      'title': 'Forest Dreams',
+      'duration': '45 min',
+      'category': 'Nature',
+      'playCount': 32,
+      'icon': Icons.forest,
+    },
+    {
+      'title': 'Peaceful Mind',
+      'duration': '15 min',
+      'category': 'Meditation',
+      'playCount': 28,
+      'icon': Icons.self_improvement,
+    },
+    {
+      'title': 'Cozy Fireplace',
+      'duration': '60 min',
+      'category': 'Cozy',
+      'playCount': 41,
+      'icon': Icons.local_fire_department,
+    },
+    {
+      'title': 'Mountain Breeze',
+      'duration': '30 min',
+      'category': 'Nature',
+      'playCount': 35,
+      'icon': Icons.air,
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.85,
+      decoration: const BoxDecoration(
+        color: Color(0xFF0F0F23),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      child: Column(
+        children: [
+          // Handle
+          Container(
+            margin: const EdgeInsets.only(top: 12),
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+
+          // Header
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                const Expanded(
+                  child: Text(
+                    'Your Favorites',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: Icon(
+                    Icons.close,
+                    color: Colors.white.withOpacity(0.7),
+                    size: 24,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Content
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: favoriteTracks.length,
+              itemBuilder: (context, index) {
+                final favorite = favoriteTracks[index];
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1A1A2E),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Colors.amber.withOpacity(0.3),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      // Favorite Icon
+                      Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.amber.withOpacity(0.3),
+                              Colors.orange.withOpacity(0.1),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Stack(
+                          children: [
+                            Center(
+                              child: Icon(
+                                favorite['icon'] as IconData,
+                                color: Colors.amber,
+                                size: 30,
+                              ),
+                            ),
+                            Positioned(
+                              top: 4,
+                              right: 4,
+                              child: Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                                size: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+
+                      // Favorite Info
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              favorite['title'] as String,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              favorite['category'] as String,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white.withOpacity(0.6),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Text(
+                                  favorite['duration'] as String,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white.withOpacity(0.7),
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                const Icon(
+                                  Icons.play_circle,
+                                  size: 16,
+                                  color: Colors.amber,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  '${favorite['playCount']} plays',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white.withOpacity(0.7),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Play Button
+                      GestureDetector(
+                        onTap: () {
+                          HapticFeedback.lightImpact();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Playing ${favorite['title']}...'),
+                              backgroundColor: Colors.amber,
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: Colors.amber,
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          child: const Icon(
+                            Icons.play_arrow,
+                            color: Colors.black,
+                            size: 24,
                           ),
                         ),
                       ),

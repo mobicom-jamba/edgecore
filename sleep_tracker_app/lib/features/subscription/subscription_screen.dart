@@ -244,7 +244,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen>
                 ),
                 const SizedBox(height: 16),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(12),
@@ -410,14 +411,12 @@ class _SubscriptionScreenState extends State<SubscriptionScreen>
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: isSelected 
-                  ? AppTheme.primaryBlue.withOpacity(0.1) 
+              color: isSelected
+                  ? AppTheme.primaryBlue.withOpacity(0.1)
                   : AppTheme.cardBackground,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isSelected 
-                    ? AppTheme.primaryBlue 
-                    : AppTheme.borderColor,
+                color: isSelected ? AppTheme.primaryBlue : AppTheme.borderColor,
                 width: isSelected ? 2 : 1,
               ),
             ),
@@ -429,14 +428,13 @@ class _SubscriptionScreenState extends State<SubscriptionScreen>
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: isSelected 
-                          ? AppTheme.primaryBlue 
+                      color: isSelected
+                          ? AppTheme.primaryBlue
                           : AppTheme.borderColor,
                       width: 2,
                     ),
-                    color: isSelected 
-                        ? AppTheme.primaryBlue 
-                        : Colors.transparent,
+                    color:
+                        isSelected ? AppTheme.primaryBlue : Colors.transparent,
                   ),
                   child: isSelected
                       ? const Icon(
@@ -458,8 +456,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen>
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: isSelected 
-                                  ? AppTheme.primaryBlue 
+                              color: isSelected
+                                  ? AppTheme.primaryBlue
                                   : AppTheme.textPrimary,
                             ),
                           ),
@@ -508,8 +506,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen>
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: isSelected 
-                                  ? AppTheme.primaryBlue 
+                              color: isSelected
+                                  ? AppTheme.primaryBlue
                                   : AppTheme.textPrimary,
                             ),
                           ),
@@ -533,7 +531,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen>
               top: -1,
               right: 20,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [AppTheme.primaryBlue, AppTheme.sleepRem],
@@ -616,7 +615,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen>
 
   Widget _buildStartTrialButton() {
     final selectedPlan = _plans[_selectedPlan];
-    
+
     return Container(
       width: double.infinity,
       height: 56,
@@ -766,7 +765,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen>
   void _navigateToApp({required bool isPremium}) {
     // Save subscription status
     // TODO: Save to persistent storage
-    
+
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
         builder: (context) => MyApp(

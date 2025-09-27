@@ -1,100 +1,93 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import '../../core/theme/app_theme.dart';
-import '../sleep_detail/sleep_detail_screen.dart';
 
-class StreamlinedDashboardScreen extends HookWidget {
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Sleep Tracker',
+      theme: ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.dark,
+        colorScheme: const ColorScheme.dark(
+          primary: Color(0xFF6B43E6),
+          surface: Color(0xFF1A1A2E),
+          onSurface: Color(0xFFE6E1E5),
+        ),
+        fontFamily: 'SF Pro Display',
+      ),
+      home: const StreamlinedDashboardScreen(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class StreamlinedDashboardScreen extends StatelessWidget {
   const StreamlinedDashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final animationController = useAnimationController(
-      duration: const Duration(milliseconds: 1200),
-    );
-
-    useEffect(() {
-      animationController.forward();
-      return null;
-    }, []);
-
     return Scaffold(
-      backgroundColor: AppTheme.darkBackground,
+      backgroundColor: const Color(0xFF0F0F23),
       body: SafeArea(
         child: Column(
           children: [
-            _buildGreetingHeader(),
+            _buildHeader(),
             Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 12),
-                    _buildSleepSummaryCard(context, animationController),
-                    const SizedBox(height: 24),
-                    _buildTodaysFocus(animationController),
-                    const SizedBox(height: 24),
-                    _buildQuickActions(animationController),
-                    const SizedBox(height: 24),
-                    _buildNavigationCards(animationController),
-                    const SizedBox(height: 100), // Space for bottom nav
-                  ],
-                ),
-              ),
+              child: _buildMainContent(),
             ),
           ],
         ),
       ),
-      floatingActionButton: _buildSleepNowFAB(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
-  Widget _buildGreetingHeader() {
-    final hour = DateTime.now().hour;
-    String greeting = hour < 12
-        ? 'Good morning'
-        : hour < 17
-            ? 'Good afternoon'
-            : 'Good evening';
-
+  Widget _buildHeader() {
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFF1A1A2E),
+            Color(0xFF0F0F23),
+          ],
+        ),
+      ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '$greeting, Sarah',
-                  style: const TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  _getContextualSubtitle(),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: AppTheme.textSecondary,
-                  ),
-                ),
-              ],
+          const Text(
+            'Hello, Jamba',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+              fontFamily: 'SF Pro Display',
+              letterSpacing: -0.3,
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(12),
+            width: 36,
+            height: 36,
             decoration: BoxDecoration(
-              color: AppTheme.cardBackground,
-              borderRadius: BorderRadius.circular(12),
+              color: Colors.white.withOpacity(0.1),
+              shape: BoxShape.circle,
             ),
-            child: const Icon(
-              Icons.notifications_outlined,
-              color: AppTheme.textSecondary,
-              size: 22,
+            child: IconButton(
+              icon: const Icon(
+                Icons.settings_outlined,
+                color: Colors.white70,
+                size: 18,
+              ),
+              onPressed: () {},
+              padding: EdgeInsets.zero,
             ),
           ),
         ],
@@ -102,521 +95,728 @@ class StreamlinedDashboardScreen extends HookWidget {
     );
   }
 
-  String _getContextualSubtitle() {
-    final hour = DateTime.now().hour;
-    if (hour < 12) return 'How did you sleep last night?';
-    if (hour < 17) return 'Plan for better sleep tonight';
-    return 'Ready for a restful night?';
+  Widget _buildMainContent() {
+    return ListView(
+      padding: const EdgeInsets.only(bottom: 80),
+      children: [
+        const SizedBox(height: 16),
+        _buildStreakCard(),
+        const SizedBox(height: 20),
+        _buildMissionSection(),
+        const SizedBox(height: 20),
+        _buildSoundSection(),
+        const SizedBox(height: 20),
+        _buildSleepReport(),
+        const SizedBox(height: 20),
+        _buildStartButton(),
+        const SizedBox(height: 20),
+      ],
+    );
   }
 
-  Widget _buildSleepSummaryCard(BuildContext context, AnimationController controller) {
-    final slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: controller, curve: Curves.easeOut));
+  Widget _buildStreakCard() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF6B43E6),
+            Color(0xFF8B5CF6),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF6B43E6).withOpacity(0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: const Row(
+        children: [
+          SizedBox(width: 16),
+          Expanded(
+            child: Text(
+              'Nice work! You\'re on a streak 🔥',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 15,
+                fontFamily: 'SF Pro Display',
+                height: 1.1,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-    return SlideTransition(
-      position: slideAnimation,
-      child: FadeTransition(
-        opacity: controller,
-        child: GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => SleepDetailScreen(
-                  sleepDate: DateTime.now().subtract(const Duration(days: 1)),
+  Widget _buildMissionSection() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF6B43E6), Color(0xFF8B5CF6)],
+                  ),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF6B43E6).withOpacity(0.4),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: const Center(
+                  child: Text(
+                    '1',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
                 ),
               ),
-            );
-          },
-          child: Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  AppTheme.primaryBlue.withOpacity(0.15),
-                  AppTheme.sleepRem.withOpacity(0.08),
-                ],
+              const SizedBox(width: 12),
+              const Text(
+                'Your Mission',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontFamily: 'SF Pro Display',
+                  letterSpacing: -0.5,
+                ),
               ),
-              borderRadius: BorderRadius.circular(24),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1A1A2E),
+              borderRadius: BorderRadius.circular(25),
               border: Border.all(
-                color: AppTheme.primaryBlue.withOpacity(0.3),
+                color: const Color(0xFF6B43E6).withOpacity(0.3),
                 width: 1,
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
             ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Last Night\'s Sleep',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: AppTheme.textPrimary,
-                          ),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(35),
+                      child: Image.network(
+                        'https://lh3.googleusercontent.com/aida-public/AB6AXuAegAOxX7B-SJNI2hHzlHvjn5RtZ0hSPtNVfSwEdeseZaswj0qWK_g0F2Njik2ojOKWRdEwuMrFjQhyMAr8rHsp67NdQfnWwoAqxYWxLwb9BxkJ61nvURiC7n4EQUDRgSIjb3Qi10NXJOyIzI7U3Sc_dp0HssBwRpR7RubAZMwCFESSdCyy5syIjRM50n25oG_UsCHNsKoQxPVaPE-KfpXHOwKhPeNZx1eCWc8VTMmiqmweztmx0i2vSsJl0GcO86i_-ub6QkLlY6o',
+                        width: 56,
+                        height: 56,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          width: 56,
+                          height: 56,
+                          color: Colors.grey[700],
+                          child: Icon(Icons.image_not_supported,
+                              color: Colors.grey[500]),
                         ),
-                        const SizedBox(height: 12),
-                        RichText(
-                          text: const TextSpan(
-                            children: [
-                              TextSpan(
-                                text: '7',
-                                style: TextStyle(
-                                  fontSize: 48,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppTheme.textPrimary,
-                                  letterSpacing: -2,
-                                ),
-                              ),
-                              TextSpan(
-                                text: 'h ',
-                                style: TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppTheme.textSecondary,
-                                ),
-                              ),
-                              TextSpan(
-                                text: '32',
-                                style: TextStyle(
-                                  fontSize: 48,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppTheme.textPrimary,
-                                  letterSpacing: -2,
-                                ),
-                              ),
-                              TextSpan(
-                                text: 'm',
-                                style: TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppTheme.textSecondary,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        const Row(
-                          children: [
-                            Icon(
-                              Icons.trending_up,
-                              size: 18,
-                              color: AppTheme.sleepRem,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Go to bed 15 minutes earlier',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                              fontFamily: 'SF Pro Display',
+                              height: 1.2,
                             ),
-                            SizedBox(width: 6),
+                          ),
+                          SizedBox(height: 6),
+                          Text(
+                            'This small change helps you build momentum towards better sleep.',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white70,
+                              fontFamily: 'SF Pro Display',
+                              height: 1.4,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF6B43E6), Color(0xFF8B5CF6)],
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF6B43E6).withOpacity(0.4),
+                        blurRadius: 12,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shadowColor: Colors.transparent,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.check_circle_outline_rounded, size: 22),
+                        SizedBox(width: 10),
+                        Text(
+                          'Mark as complete',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            fontFamily: 'SF Pro Display',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSoundSection() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 28,
+                    height: 28,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF6B43E6), Color(0xFF8B5CF6)],
+                      ),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF6B43E6).withOpacity(0.4),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: const Center(
+                      child: Text(
+                        '2',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  const Text(
+                    'Choose Your Sounds',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontFamily: 'SF Pro Display',
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF6B43E6).withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: const Text(
+                  'Change',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF6B43E6),
+                    fontFamily: 'SF Pro Display',
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: _buildSoundCard(
+                  title: 'Soundscapes',
+                  imageUrl:
+                      'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=400&h=400&fit=crop',
+                  label: 'Playing: Gentle Rain',
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _buildSoundCard(
+                  title: 'Smart Alarm',
+                  imageUrl:
+                      'https://images.unsplash.com/photo-1495954484750-af469f2f9be5?w=400&h=400&fit=crop',
+                  label: 'Alarm at 7:00 AM',
+                  // isAlarm: true,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSoundCard({
+    required String title,
+    required String imageUrl,
+    required String label,
+    bool isAlarm = false,
+  }) {
+    if (!isAlarm) {
+      // Soundscapes card with image above text
+      return Container(
+        height: 180,
+        decoration: BoxDecoration(
+          color: const Color(0xFF1A1A2E),
+          borderRadius: BorderRadius.circular(25),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.1),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            // Image area
+            Expanded(
+              flex: 4,
+              child: Container(
+                margin: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Stack(
+                    children: [
+                      // Background image
+                      Image.network(
+                        imageUrl,
+                        width: double.infinity,
+                        height: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          width: double.infinity,
+                          height: double.infinity,
+                          color: Colors.grey[700],
+                          child: Icon(Icons.image_not_supported,
+                              color: Colors.grey[500]),
+                        ),
+                      ),
+                      // Playing label overlay - bottom center
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 12,
+                        child: Center(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.7),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              label,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'SF Pro Display',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            // Title at bottom
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontFamily: 'SF Pro Display',
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      // Smart Alarm card (original design)
+      return Container(
+        height: 180,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1A1A2E),
+          borderRadius: BorderRadius.circular(25),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.1),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF4B5563),
+                    borderRadius: BorderRadius.circular(18),
+                  ),
+                  child: const Icon(
+                    Icons.alarm_rounded,
+                    color: Color(0xFF9CA3AF),
+                    size: 20,
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Colors.white70,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'SF Pro Display',
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontFamily: 'SF Pro Display',
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  Widget _buildSleepReport() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Last Night\'s Sleep',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontFamily: 'SF Pro Display',
+              letterSpacing: -0.5,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1A1A2E),
+              borderRadius: BorderRadius.circular(25),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.1),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 90,
+                  height: 90,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      const SizedBox(
+                        width: 90,
+                        height: 90,
+                        child: CircularProgressIndicator(
+                          value: 0.82,
+                          strokeWidth: 8,
+                          backgroundColor: Color(0xFF374151),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Color(0xFF6B43E6),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 70,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF6B43E6).withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
                             Text(
-                              '+12% vs last week',
+                              '82',
                               style: TextStyle(
-                                fontSize: 14,
-                                color: AppTheme.sleepRem,
-                                fontWeight: FontWeight.w600,
+                                fontSize: 26,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontFamily: 'SF Pro Display',
+                              ),
+                            ),
+                            Text(
+                              'Score',
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.white70,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'SF Pro Display',
                               ),
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                    _buildQualityScore(),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Tap for detailed analysis',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppTheme.textTertiary,
-                        fontStyle: FontStyle.italic,
                       ),
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                      color: AppTheme.textTertiary,
-                    ),
-                  ],
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 24),
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Good Sleep',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontFamily: 'SF Pro Display',
+                        ),
+                      ),
+                      SizedBox(height: 6),
+                      Text(
+                        'You slept for 7h 30m. Great consistency!',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white70,
+                          fontFamily: 'SF Pro Display',
+                          height: 1.4,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Tap to view details',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF6B43E6),
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'SF Pro Display',
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildQualityScore() {
-    return Container(
-      width: 100,
-      height: 100,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: AppTheme.sleepRem.withOpacity(0.3),
-          width: 2,
-        ),
-      ),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          SizedBox(
-            width: 100,
-            height: 100,
-            child: CircularProgressIndicator(
-              value: 0.85,
-              strokeWidth: 8,
-              backgroundColor: AppTheme.cardBackground.withOpacity(0.5),
-              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.sleepRem),
-            ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                '85',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.textPrimary,
-                ),
-              ),
-              const Text(
-                'Quality\nScore',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 11,
-                  color: AppTheme.textTertiary,
-                  height: 1.2,
-                ),
-              ),
-            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTodaysFocus(AnimationController controller) {
-    final slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: controller,
-      curve: const Interval(0.2, 1.0, curve: Curves.easeOut),
-    ));
-
-    return SlideTransition(
-      position: slideAnimation,
-      child: FadeTransition(
-        opacity: CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0.2, 1.0),
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                AppTheme.sleepRem.withOpacity(0.1),
-                AppTheme.sleepDeep.withOpacity(0.05),
+  Widget _buildStartButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF6B43E6), Color(0xFF8B5CF6)],
+              ),
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF6B43E6).withOpacity(0.4),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
               ],
             ),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: AppTheme.sleepRem.withOpacity(0.2),
-              width: 1,
-            ),
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: AppTheme.sleepRem.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: const Icon(
-                  Icons.auto_awesome,
-                  color: AppTheme.sleepRem,
-                  size: 28,
+            child: const Center(
+              child: Text(
+                '3',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(width: 16),
-              const Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Today\'s Focus',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.textPrimary,
-                      ),
-                    ),
-                    SizedBox(height: 6),
-                    Text(
-                      'Optimize your sleep environment',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: AppTheme.textSecondary,
-                      ),
-                    ),
-                    SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Text(
-                          '2 of 3 completed',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: AppTheme.sleepRem,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: LinearProgressIndicator(
-                            value: 2 / 3,
-                            backgroundColor: AppTheme.cardBackground,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                AppTheme.sleepRem),
-                            borderRadius: BorderRadius.all(Radius.circular(2)),
-                          ),
-                        ),
-                      ],
-                    ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFF8B5CF6),
+                    Color(0xFF6B43E6),
                   ],
                 ),
-              ),
-              const Icon(
-                Icons.chevron_right,
-                color: AppTheme.textTertiary,
-                size: 24,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildQuickActions(AnimationController controller) {
-    final slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: controller,
-      curve: const Interval(0.3, 1.0, curve: Curves.easeOut),
-    ));
-
-    return SlideTransition(
-      position: slideAnimation,
-      child: FadeTransition(
-        opacity: CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0.3, 1.0),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Quick Log',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: AppTheme.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 16),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  _buildQuickLogChip('Caffeine', Icons.local_cafe, AppTheme.sleepAwake),
-                  const SizedBox(width: 12),
-                  _buildQuickLogChip('Exercise', Icons.fitness_center, AppTheme.sleepRem),
-                  const SizedBox(width: 12),
-                  _buildQuickLogChip('Mood', Icons.mood, AppTheme.sleepDeep),
-                  const SizedBox(width: 12),
-                  _buildQuickLogChip('Stress', Icons.psychology, AppTheme.sleepLight),
-                  const SizedBox(width: 12),
-                  _buildQuickLogChip('Meal', Icons.restaurant, AppTheme.primaryBlue),
+                borderRadius: BorderRadius.circular(25),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF6B43E6).withOpacity(0.4),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
                 ],
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildQuickLogChip(String label, IconData icon, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-      decoration: BoxDecoration(
-        color: AppTheme.cardBackground,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: color.withOpacity(0.3),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            size: 20,
-            color: color,
-          ),
-          const SizedBox(width: 10),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
-              color: AppTheme.textPrimary,
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  foregroundColor: Colors.white,
+                  elevation: 0,
+                  shadowColor: Colors.transparent,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.play_circle_outline_rounded,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                    SizedBox(width: 12),
+                    Text(
+                      'Start Bedtime Routine',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                        fontFamily: 'SF Pro Display',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildNavigationCards(AnimationController controller) {
-    final slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: controller,
-      curve: const Interval(0.4, 1.0, curve: Curves.easeOut),
-    ));
-
-    return SlideTransition(
-      position: slideAnimation,
-      child: FadeTransition(
-        opacity: CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0.4, 1.0),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: _buildNavigationCard(
-                'Analytics',
-                'View trends & insights',
-                Icons.analytics_outlined,
-                AppTheme.primaryBlue,
-                () {
-                  // Navigate to analytics
-                },
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: _buildNavigationCard(
-                'Soundscapes',
-                'Sleep sounds & stories',
-                Icons.music_note_outlined,
-                AppTheme.sleepLight,
-                () {
-                  // Navigate to soundscapes
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavigationCard(
-    String title,
-    String subtitle,
-    IconData icon,
-    Color color,
-    VoidCallback onTap,
-  ) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: AppTheme.cardBackground,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: color.withOpacity(0.2),
-            width: 1,
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(
-                icon,
-                color: color,
-                size: 24,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: AppTheme.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              subtitle,
-              style: const TextStyle(
-                fontSize: 13,
-                color: AppTheme.textSecondary,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSleepNowFAB() {
-    final hour = DateTime.now().hour;
-    final isEvening = hour >= 20 || hour <= 6;
-
-    if (!isEvening) return const SizedBox.shrink();
-
-    return FloatingActionButton.extended(
-      onPressed: () {
-        // Navigate to sleep session
-      },
-      backgroundColor: AppTheme.primaryBlue,
-      foregroundColor: Colors.white,
-      icon: const Icon(Icons.bedtime),
-      label: const Text(
-        'Sleep Now',
-        style: TextStyle(fontWeight: FontWeight.w600),
-      ),
-      elevation: 4,
     );
   }
 }

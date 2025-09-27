@@ -61,8 +61,9 @@ class SleepDebtIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDebt = sleepDebt.isNegative;
-    final color = isDebt ? SleepColors.sleepDebtNegative : SleepColors.sleepDebtPositive;
-    
+    final color =
+        isDebt ? SleepColors.sleepDebtNegative : SleepColors.sleepDebtPositive;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -129,7 +130,7 @@ class SleepQualityIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = SleepColors.getQualityColor(qualityScore);
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -215,9 +216,12 @@ class SleepQualityIndicator extends StatelessWidget {
   }
 
   String _getDetailedQualityDescription(int score) {
-    if (score >= 85) return "Excellent sleep quality! You had optimal deep sleep phases and good REM cycles.";
-    if (score >= 75) return "Good sleep quality with solid deep sleep, but REM could be improved.";
-    if (score >= 65) return "Fair sleep quality. Consider improving sleep hygiene for better rest.";
+    if (score >= 85)
+      return "Excellent sleep quality! You had optimal deep sleep phases and good REM cycles.";
+    if (score >= 75)
+      return "Good sleep quality with solid deep sleep, but REM could be improved.";
+    if (score >= 65)
+      return "Fair sleep quality. Consider improving sleep hygiene for better rest.";
     return "Poor sleep quality. Multiple wake-ups detected. Consider consulting a sleep specialist.";
   }
 }
@@ -234,10 +238,13 @@ class SleepGoalProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final progress = (totalSleep.inMinutes / sleepGoal.inMinutes).clamp(0.0, 1.0);
-    final formattedTotal = '${totalSleep.inHours}h ${totalSleep.inMinutes.remainder(60)}m';
-    final formattedGoal = '${sleepGoal.inHours}h ${sleepGoal.inMinutes.remainder(60)}m';
-    
+    final progress =
+        (totalSleep.inMinutes / sleepGoal.inMinutes).clamp(0.0, 1.0);
+    final formattedTotal =
+        '${totalSleep.inHours}h ${totalSleep.inMinutes.remainder(60)}m';
+    final formattedGoal =
+        '${sleepGoal.inHours}h ${sleepGoal.inMinutes.remainder(60)}m';
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -306,9 +313,9 @@ class QuickActionsGrid extends StatelessWidget {
   final List<QuickAction> actions;
 
   const QuickActionsGrid({
-    Key? key,
+    super.key,
     required this.actions,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -334,36 +341,36 @@ class QuickActionsGrid extends StatelessWidget {
               action.onTap();
             },
             child: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: SleepColors.cardBackground,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: action.color?.withOpacity(0.3) ?? Colors.transparent,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: SleepColors.cardBackground,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: action.color?.withOpacity(0.3) ?? Colors.transparent,
+                ),
               ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  action.icon,
-                  size: 24,
-                  color: action.color ?? SleepColors.textSecondary,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  action.label,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: SleepColors.textPrimary,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    action.icon,
+                    size: 24,
+                    color: action.color ?? SleepColors.textSecondary,
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
+                  const SizedBox(height: 8),
+                  Text(
+                    action.label,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: SleepColors.textPrimary,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -440,7 +447,8 @@ class InsightCard extends StatelessWidget {
                 insight.onAction!();
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
                   color: insight.color.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
@@ -495,10 +503,11 @@ class SleepStageBreakdown extends StatelessWidget {
     final percentage = data.stagePercentages[type] ?? 0.0;
     final color = SleepColors.getStageColor(type);
     final label = _getStageLabel(type);
-    
+
     final hours = duration.inHours;
     final minutes = duration.inMinutes.remainder(60);
-    final formattedDuration = hours > 0 ? '${hours}h ${minutes}m' : '${minutes}m';
+    final formattedDuration =
+        hours > 0 ? '${hours}h ${minutes}m' : '${minutes}m';
 
     return Container(
       padding: const EdgeInsets.all(12),
@@ -600,7 +609,7 @@ class PeriodSelector extends StatelessWidget {
               duration: const Duration(milliseconds: 200),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: isSelected 
+                color: isSelected
                     ? SleepColors.deepSleep.withOpacity(0.3)
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(16),
@@ -611,9 +620,10 @@ class PeriodSelector extends StatelessWidget {
                     period,
                     style: TextStyle(
                       fontSize: 12,
-                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                      color: isSelected 
-                          ? SleepColors.textPrimary 
+                      fontWeight:
+                          isSelected ? FontWeight.w600 : FontWeight.w400,
+                      color: isSelected
+                          ? SleepColors.textPrimary
                           : SleepColors.textTertiary,
                     ),
                   ),
@@ -622,8 +632,8 @@ class PeriodSelector extends StatelessWidget {
                     _getPeriodDescription(period),
                     style: TextStyle(
                       fontSize: 10,
-                      color: isSelected 
-                          ? SleepColors.textSecondary 
+                      color: isSelected
+                          ? SleepColors.textSecondary
                           : SleepColors.textTertiary,
                     ),
                   ),

@@ -4,8 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'core/theme/app_theme.dart';
 import 'features/dashboard/streamlined_dashboard_screen.dart';
 import 'features/onboarding/onboarding_screen.dart';
-import 'features/analytics/enhanced_analytics_screen.dart';
 import 'features/soundscapes/soundscapes_screen.dart';
+import 'features/progress/progress_screen.dart';
 import 'features/welcome/welcome_screen.dart';
 import 'shared/widgets/custom_bottom_navigation.dart';
 
@@ -15,7 +15,7 @@ void main() async {
   // Check if user is first time
   final prefs = await SharedPreferences.getInstance();
   final isFirstTime = prefs.getBool('isFirstTime') ?? true;
-  final isPremium = prefs.getBool('isPremium') ?? false;
+  final isPremium = prefs.getBool('isPremium') ?? true;
 
   runApp(
     ProviderScope(
@@ -77,16 +77,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
       vsync: this,
     );
 
-    // Initialize screens based on subscription status
+    // Initialize screens - 3 tabs only
     _screens = [
-      const StreamlinedDashboardScreen(),
-      widget.isPremium
-          ? const SoundscapesScreen()
-          : const PlaceholderScreen(title: 'Soundscapes - Premium'),
-      widget.isPremium
-          ? const EnhancedAnalyticsScreen()
-          : const PlaceholderScreen(title: 'Analytics - Premium'),
-      const PlaceholderScreen(title: 'Profile'),
+      const StreamlinedDashboardScreen(), // Tonight
+      const SoundscapesScreen(),          // Sounds
+      const ProgressScreen(),             // Progress
     ];
 
     // Start navigation animation

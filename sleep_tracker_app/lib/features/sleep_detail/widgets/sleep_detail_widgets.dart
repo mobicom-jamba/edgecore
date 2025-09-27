@@ -266,7 +266,7 @@ class MetricCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
@@ -277,6 +277,7 @@ class MetricCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -284,45 +285,51 @@ class MetricCard extends StatelessWidget {
               Icon(
                 icon,
                 color: color,
-                size: 20,
+                size: 18,
               ),
               if (isPositive != null)
                 Icon(
                   isPositive! ? Icons.trending_up : Icons.trending_down,
                   color: isPositive! ? AppTheme.successGreen : AppTheme.warningOrange,
-                  size: 16,
+                  size: 14,
                 ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           Text(
             value,
             style: const TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
               color: AppTheme.textPrimary,
             ),
           ),
-          const SizedBox(height: 2),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 11,
-              color: AppTheme.textSecondary,
-              fontWeight: FontWeight.w500,
+          const SizedBox(height: 1),
+          Flexible(
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 10,
+                color: AppTheme.textSecondary,
+                fontWeight: FontWeight.w500,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            subtitle,
-            style: TextStyle(
-              fontSize: 9,
-              color: isPositive == null
-                  ? AppTheme.textTertiary
+          const SizedBox(height: 2),
+          Flexible(
+            child: Text(
+              subtitle,
+              style: TextStyle(
+                fontSize: 8,
+                color: isPositive == null
+                    ? AppTheme.textTertiary
                   : isPositive!
                       ? AppTheme.successGreen
                       : AppTheme.warningOrange,
               fontWeight: FontWeight.w500,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
